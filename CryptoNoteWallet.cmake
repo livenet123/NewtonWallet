@@ -1,0 +1,4 @@
+set(CN_PROJECT_NAME "NewtonWallet")
+set(CN_CURRENCY_DISPLAY_NAME "Newton")
+set(CN_CURRENCY_TICKER "NCP")
+set(CN_VERSION 2.0.0)

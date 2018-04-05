@@ -1,0 +1,3 @@
+[submodule "IntrinsicCoin"]
+	path = IntrinsicCoin
+	url = https://github.com/intrinsiccoin/IntrinsicCoin-GUI-Wallet.git

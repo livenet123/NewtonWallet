@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Newton.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QEvent>
 #include <QFileOpenEvent>
@@ -59,7 +59,7 @@ namespace WalletGui {
 
 namespace {
 
-const char BYTECOIN_URI_SCHEME_NAME[] = "NewtonWallet";
+const char URI_SCHEME_NAME[] = "NewtonWallet";
 const QRegularExpression LOG_SPLASH_REG_EXP("\\[Core\\] Imported block with index");
 
 quint16 findPort() {
@@ -140,9 +140,9 @@ bool WalletApplication::init() {
   makeDataDir();
   WalletLogger::init(Settings::instance().getDataDir(), Settings::instance().hasDebugOption(), this);
   WalletLogger::info(tr("[Application] Initializing..."));
-  m_lockFile = new QLockFile(Settings::instance().getDataDir().absoluteFilePath("NewtonWallet.lock"));
+  m_lockFile = new QLockFile(Settings::instance().getDataDir().absoluteFilePath("Newton.lock"));
   QUrl paymentUrl = QUrl::fromUserInput(arguments().last());
-  if (paymentUrl.scheme() != BYTECOIN_URI_SCHEME_NAME) {
+  if (paymentUrl.scheme() != URI_SCHEME_NAME) {
     paymentUrl = QUrl();
   }
 
@@ -152,9 +152,9 @@ bool WalletApplication::init() {
   }
 #endif
   if (!m_lockFile->tryLock()) {
-    WalletLogger::warning(tr("[Application] Newton Coin wallet already running"));
+    WalletLogger::warning(tr("[Application] Newton wallet already running"));
     if (!paymentUrl.isValid()) {
-      QMessageBox::warning(nullptr, QObject::tr("Fail"), "Newton Coin wallet already running");
+      QMessageBox::warning(nullptr, QObject::tr("Fail"), "Newton wallet already running");
     }
 
     return false;
@@ -240,7 +240,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
   for (;;) {
     if (m_splash != nullptr) {
       m_splash->show();
-      m_splash->showMessage(QObject::tr("Loading blockchain..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+      m_splash->showMessage(QObject::tr("Loading blockchain..."), Qt::AlignLeft | Qt::AlignBottom, Qt::darkGray);
       if (m_logWatcher == nullptr) {
         m_logWatcher = new LogFileWatcher(Settings::instance().getDataDir().absoluteFilePath(CORE_LOG_FILE_NAME), this);
         connect(m_logWatcher, &LogFileWatcher::newLogStringSignal, this, &WalletApplication::newLogString);
@@ -262,7 +262,7 @@ bool WalletApplication::initCryptoNoteAdapter() {
       okButton->setText(QObject::tr("Ok"));
       dlg.addButton(okButton, QMessageBox::AcceptRole);
       dlg.setText(QObject::tr("The database is currently used by another application or service.\n"
-      "If you have newtond with non-default RPC port, you should terminate it and relaunch NewtonWallet\n"
+      "If you have Newton with non-default RPC port, you should terminate it and relaunch NewtonWallet\n"
       "or\n"
       "Set the Local deamon required port in NewtonWallet Menu/Preferences/Connection settings."));
       dlg.exec();

@@ -34,9 +34,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <property name="locale">
-   <locale language="English" country="UnitedStates"/>
-  </property>
   <property name="frameShape">
    <enum>QFrame::NoFrame</enum>
   </property>
@@ -217,8 +214,14 @@
        <property name="decimals">
         <number>8</number>
        </property>
+       <property name="minimum">
+        <double>0.000000000000000</double>
+       </property>
        <property name="maximum">
-        <double>1000000000000.000000000000000</double>
+        <double>10999999.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000000000000000</double>
        </property>
       </widget>
      </item>

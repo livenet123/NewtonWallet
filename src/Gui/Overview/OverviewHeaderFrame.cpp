@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QClipboard>
@@ -89,8 +89,8 @@ const char OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE[] =
     "max-height: 23px;"
     "border: 1px solid %backgroundColorGreen%;"
     "background-color: %backgroundColorGreen%;"
-    "color: #e7ffb3;" //#ffffff
-    "image: url(""C:/Users/alaa/source/repos/Newtonwallet/src/icons/start-mining.png"");"
+    "color: #ffffff;"
+    "image: url(:icons/start-mining);"
     "image-position: left;"
     "padding-left: 7px;"
   "}"
@@ -103,7 +103,7 @@ const char OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE[] =
     "border: 1px solid %borderColor%;"
     "background-color: %backgroundColorGray%;"
     "color: %fontColorGray%;"
-    "image: url(""C:/Users/alaa/source/repos/Newtonwallet/src/icons/stop-mining.png"");"
+    "image: url(:icons/stop-mining);"
   "}"
 
   "WalletGui--OverviewHeaderFrame #m_startMiningButton:checked:hover {"
@@ -124,15 +124,15 @@ const char OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE[] =
 OverviewHeaderFrame::OverviewHeaderFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::OverviewHeaderFrame),
   m_cryptoNoteAdapter(nullptr), m_miningManager(nullptr), m_mainWindow(nullptr), m_nodeStateModel(nullptr),
   m_walletStateModel(nullptr), m_transactionPoolModel(nullptr), m_overViewTransactionPoolModel(nullptr),
-  m_miningMapper(new QDataWidgetMapper(this)), m_syncMovie(new QMovie("C:/Users/alaa/source/repos/Newtonwallet/src/icons/light/wallet-sync.png", QByteArray(), this)),
+  m_miningMapper(new QDataWidgetMapper(this)), m_syncMovie(new QMovie(":icons/light/wallet-sync", QByteArray(), this)),
   m_balancesGlassFrame(new OverviewHeaderGlassFrame(m_syncMovie, nullptr)),
   m_miningStatsGlassFrame(new OverviewHeaderGlassFrame(m_syncMovie, nullptr)),
   m_transactionPoolGlassFrame(new OverviewHeaderGlassFrame(m_syncMovie, nullptr)) {
   m_ui->setupUi(this);
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(OVERVIEW_HEADER_STYLE_SHEET_TEMPLATE));
-  m_ui->m_overviewAvailableBalanceLabel->installEventFilter(this);
-  m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
-  m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
+ // m_ui->m_overviewAvailableBalanceLabel->installEventFilter(this);
+ // m_ui->m_overviewLockedBalanceLabel->installEventFilter(this);
+ // m_ui->m_overviewTotalBalanceLabel->installEventFilter(this);
 }
 
 OverviewHeaderFrame::~OverviewHeaderFrame() {
@@ -336,15 +336,15 @@ void OverviewHeaderFrame::walletStateModelDataChanged(const QModelIndex& _topLef
   if (_topLeft.column() == WalletStateModel::COLUMN_ABOUT_TO_BE_SYNCHRONIZED) {
     bool walletAboutToBeSynchronized = _topLeft.data().toBool();
     if (!walletAboutToBeSynchronized) {
-      m_balancesGlassFrame->install(m_ui->m_overviewBalanceFrame);
-      m_miningStatsGlassFrame->install(m_ui->m_overviewMiningFrame);
-      m_transactionPoolGlassFrame->install(m_ui->m_overviewPoolFrame);
-      m_syncMovie->start();
+    //  m_balancesGlassFrame->install(m_ui->m_overviewBalanceFrame);
+    //  m_miningStatsGlassFrame->install(m_ui->m_overviewMiningFrame);
+    //  m_transactionPoolGlassFrame->install(m_ui->m_overviewPoolFrame);
+    //  m_syncMovie->start();
     } else {
-      m_balancesGlassFrame->remove();
-      m_miningStatsGlassFrame->remove();
-      m_transactionPoolGlassFrame->remove();
-      m_syncMovie->stop();
+    //  m_balancesGlassFrame->remove();
+    //  m_miningStatsGlassFrame->remove();
+    //  m_transactionPoolGlassFrame->remove();
+    //  m_syncMovie->stop();
     }
   }
 }

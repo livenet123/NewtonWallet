@@ -1,24 +1,24 @@
-// Copyright (c) 2015-2017, The intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QClipboard>
 #include <QCompleter>
 #include <QWheelEvent>
-
+#include <QStyle>
 #include "TransferFrame.h"
 #include "Settings/Settings.h"
 #include "Gui/Common/AddressBookDialog.h"
@@ -32,6 +32,7 @@ namespace WalletGui {
 
 namespace {
 
+Q_DECL_CONSTEXPR quint32 ADDRESS_INPUT_INTERVAL = 1500;
 const char TRANSFER_FRAME_STYLE_SHEET_TEMPLATE[] =
   "WalletGui--TransferFrame {"
     "background-color: %backgroundColorGray%;"
@@ -55,10 +56,12 @@ const char TRANSFER_FRAME_STYLE_SHEET_TEMPLATE[] =
 }
 
 TransferFrame::TransferFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::TransferFrame),
-  m_cryptoNoteAdapter(nullptr), m_mainWindow(nullptr), m_addressBookModel(nullptr), m_addressCompleter(new QCompleter(this)) {
+  m_cryptoNoteAdapter(nullptr), m_mainWindow(nullptr), m_addressBookModel(nullptr), m_addressCompleter(new QCompleter(this)),
+  m_aliasProvider(new DnsManager(this)), m_addressInputTimer(-1) {
   m_ui->setupUi(this);
   m_ui->m_sendAmountSpin->installEventFilter(this);
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(TRANSFER_FRAME_STYLE_SHEET_TEMPLATE));
+  connect(m_aliasProvider, &DnsManager::aliasFoundSignal, this, &TransferFrame::onAliasFound);
 }
 
 TransferFrame::~TransferFrame() {
@@ -70,7 +73,13 @@ bool TransferFrame::readyToSend() const {
 }
 
 QString TransferFrame::getAddress() const {
-  return m_ui->m_sendAddressEdit->text().trimmed();
+  QString _address = m_ui->m_sendAddressEdit->text().trimmed();
+  if (_address.contains('<')) {
+    int startPos = _address.indexOf('<');
+    int endPos = _address.indexOf('>');
+    _address = _address.mid(startPos + 1, endPos - startPos - 1);
+  }
+  return _address;
 }
 
 QString TransferFrame::getAmountString() const {
@@ -250,6 +259,9 @@ void TransferFrame::addressBookClicked() {
   AddressBookDialog dlg(m_addressBookModel, m_mainWindow);
   if (dlg.exec() == QDialog::Accepted) {
     m_ui->m_sendAddressEdit->setText(dlg.getAddress());
+    if(!dlg.getPaymentId().isEmpty()) {
+      Q_EMIT insertPaymentIdSignal(dlg.getPaymentId());
+    }
   }
 }
 
@@ -259,8 +271,15 @@ void TransferFrame::pasteClicked() {
 
 void TransferFrame::addressChanged(const QString& _address) {
   setAddressError(m_addressCompleter->currentCompletion().isEmpty() && !_address.isEmpty() &&
-    !m_cryptoNoteAdapter->isValidAddress(_address));
+    !m_cryptoNoteAdapter->isValidAddress(getAddress()));
   Q_EMIT addressChangedSignal(_address);
+
+  if(!_address.isEmpty() && _address.contains('.')) {
+    if (m_addressInputTimer != -1) {
+      killTimer(m_addressInputTimer);
+    }
+    m_addressInputTimer = startTimer(ADDRESS_INPUT_INTERVAL);
+  }
 }
 
 void TransferFrame::labelOrAddressChanged(const QString& _text) {
@@ -286,6 +305,19 @@ void TransferFrame::validateAmount(double _amount) {
 
 void TransferFrame::amountStringChanged(const QString& _amountString) {
   Q_EMIT amountStringChangedSignal(m_ui->m_sendAmountSpin->cleanText());
+}
+
+void TransferFrame::timerEvent(QTimerEvent* _event) {
+  if (_event->timerId() == m_addressInputTimer) {
+    m_aliasProvider->getAddresses(m_ui->m_sendAddressEdit->text().trimmed());
+    return;
+  }
+
+  QFrame::timerEvent(_event);
+}
+
+void TransferFrame::onAliasFound(const QString& _name, const QString& _address) {
+  m_ui->m_sendAddressEdit->setText(QString("%1 <%2>").arg(_name).arg(_address));
 }
 
 }

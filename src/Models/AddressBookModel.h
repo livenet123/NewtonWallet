@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
@@ -34,11 +34,11 @@ class AddressBookModel : public QAbstractItemModel, public IAddressBookManagerOb
 
 public:
   enum Columns {
-    COLUMN_LABEL = 0, COLUMN_ADDRESS, COLUMN_DONATION, COLUMN_ACTION
+    COLUMN_LABEL = 0, COLUMN_ADDRESS, COLUMN_PAYMENT_ID, COLUMN_DONATION, COLUMN_ACTION
   };
 
   enum Roles {
-    ROLE_LABEL = Qt::UserRole, ROLE_ADDRESS, ROLE_IS_DONATION_ADDRESS, ROLE_COLUMN, ROLE_ROW
+    ROLE_LABEL = Qt::UserRole, ROLE_ADDRESS, ROLE_PAYMENT_ID, ROLE_IS_DONATION_ADDRESS, ROLE_COLUMN, ROLE_ROW
   };
 
   explicit AddressBookModel(IAddressBookManager* _addressBookManager, QObject* _parent);

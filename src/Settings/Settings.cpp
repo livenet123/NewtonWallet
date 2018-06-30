@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsicoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsicoin.
+// This file is part of Bytecoin.
 //
-// Intrinsicoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsicoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsicoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QCoreApplication>
 #include <QFile>
@@ -29,7 +29,6 @@
 #include <Common/Util.h>
 #include <CryptoNoteConfig.h>
 
-#include "CryptoNoteWalletConfig.h"
 #include "Settings.h"
 #include "Application/CommandLineParser.h"
 #include "Style/LightStyle.h"
@@ -68,7 +67,11 @@ const char OPTION_PRIVACY_NEWS_ENABLED[] = "newsEnabled";
 const char DEFAULT_WALLET_FILE_NAME[] = "Newton.wallet";
 const quint64 DEFAULT_OPTIMIZATION_PERIOD = 1000 * 60 * 30; // 30 minutes
 const quint64 DEFAULT_OPTIMIZATION_THRESHOLD = 10000000000000;
-const quint64 DEFAULT_OPTIMIZATION_MIXIN = 3;
+const quint64 DEFAULT_OPTIMIZATION_MIXIN = 6;
+
+const quint64 VERSION_MAJOR = 2;
+const quint64 VERSION_MINOR = 5;
+const quint64 VERSION_PATCH = 0;
 
 }
 
@@ -79,7 +82,7 @@ Settings& Settings::instance() {
 
 
 Settings::Settings() : m_p2pBindPort(0), m_cmdLineParser(nullptr) {
-  m_defaultPoolList << "localhost:21236";
+  m_defaultPoolList << "www.newtoncoin.club:3333" << "ncp.ms-pool.net.ua:3333" << "eu-ncp.4miner.me:3334" << "ncp-eu.ciapool.com:4005";
 
   Style* lightStyle = new LightStyle();
   Style* darkStyle = new DarkStyle();
@@ -144,7 +147,7 @@ bool Settings::isSystemTrayAvailable() const {
 #else
 
 #ifdef Q_OS_LINUX
-  if (QString(qVersion()) < "5.5.0") {
+  if (QString(qVersion()) < "2.5.0") {
     return false;
   }
 #endif
@@ -455,6 +458,10 @@ QStringList Settings::getMiningPoolList() const {
   return res;
 }
 
+quint64 Settings::getAddressPrefix() const {
+  return CryptoNote::parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX;
+}
+
 bool Settings::isStartOnLoginEnabled() const {
   QReadLocker lock(&m_lock);
   bool res = false;
@@ -464,7 +471,7 @@ bool Settings::isStartOnLoginEnabled() const {
     return false;
   }
 
-  QString autorunFilePath = autorunDir.absoluteFilePath("NewtonWallet.plist");
+  QString autorunFilePath = autorunDir.absoluteFilePath("Newton.plist");
   if (!QFile::exists(autorunFilePath)) {
     return false;
   }
@@ -482,12 +489,12 @@ bool Settings::isStartOnLoginEnabled() const {
     return false;
   }
 
-  QString autorunFilePath = autorunDir.absoluteFilePath("NewtonWallet.desktop");
+  QString autorunFilePath = autorunDir.absoluteFilePath("Newton.desktop");
   res = QFile::exists(autorunFilePath);
 #elif defined(Q_OS_WIN)
   QSettings autorunSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-  res = autorunSettings.contains("NewtonWallet") &&
-    !QDir::fromNativeSeparators(autorunSettings.value("NewtonWallet").toString().split(' ')[0]).compare(QCoreApplication::applicationFilePath());
+  res = autorunSettings.contains("Newton") &&
+    !QDir::fromNativeSeparators(autorunSettings.value("Newton").toString().split(' ')[0]).compare(QCoreApplication::applicationFilePath());
 #endif
   return res;
 }
@@ -650,7 +657,7 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
       return;
     }
 
-    QString autorunFilePath = autorunDir.absoluteFilePath("NewtonWallet.plist");
+    QString autorunFilePath = autorunDir.absoluteFilePath("Newton.plist");
     QSettings autorunSettings(autorunFilePath, QSettings::NativeFormat);
     autorunSettings.remove("Program");
     autorunSettings.setValue("Label", "org.Newton.NewtonWallet");
@@ -672,7 +679,7 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
       return;
     }
 
-    QString autorunFilePath = autorunDir.absoluteFilePath("NewtonWallet.desktop");
+    QString autorunFilePath = autorunDir.absoluteFilePath("Newton.desktop");
     QFile autorunFile(autorunFilePath);
     if (!autorunFile.open(QFile::WriteOnly | QFile::Truncate)) {
       return;
@@ -693,9 +700,9 @@ void Settings::setStartOnLoginEnabled(bool _enable) {
     QSettings autorunSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
     if (_enable) {
       QString appPath = QString("%1 --minimized").arg(QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
-      autorunSettings.setValue("Newtonwallet", appPath);
+      autorunSettings.setValue("Newton", appPath);
     } else {
-      autorunSettings.remove("Newtonwallet");
+      autorunSettings.remove("Newton");
     }
 #endif
   }
@@ -930,12 +937,12 @@ void Settings::removeObserver(ISettingsObserver* _settingsObserver) {
 #ifdef Q_OS_WIN
 void Settings::setUrlHandler() {
   QWriteLocker lock(&m_lock);
-  QSettings protocolSettings("HKEY_CURRENT_USER\\Software\\Classes\\NewtonWallet", QSettings::NativeFormat);
-  protocolSettings.setValue(".", "URL:NewtonWallet");
+  QSettings protocolSettings("HKEY_CURRENT_USER\\Software\\Classes\\Newton", QSettings::NativeFormat);
+  protocolSettings.setValue(".", "URL:Newton");
   protocolSettings.setValue("URL Protocol", "");
-  QSettings iconSettings("HKEY_CURRENT_USER\\Software\\Classes\\NewtonWallet\\DefaultIcon", QSettings::NativeFormat);
+  QSettings iconSettings("HKEY_CURRENT_USER\\Software\\Classes\\Newton\\DefaultIcon", QSettings::NativeFormat);
   iconSettings.setValue(".", QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
-  QSettings openSettings("HKEY_CURRENT_USER\\Software\\Classes\\NewtonWallet\\shell\\open\\command", QSettings::NativeFormat);
+  QSettings openSettings("HKEY_CURRENT_USER\\Software\\Classes\\Newton\\shell\\open\\command", QSettings::NativeFormat);
   QString commandString("\"%1\" \"%2\"");
   openSettings.setValue(".", commandString.arg(QDir::toNativeSeparators(QCoreApplication::applicationFilePath())).arg("%1"));
 }

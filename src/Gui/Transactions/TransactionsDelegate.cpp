@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QLayout>
 #include <QPainter>
@@ -41,16 +41,16 @@ const char SHOW_TRANSFERS_BUTTON_STYLE_SHEET[] =
     "max-width: 30px;"
     "min-height: 30px;"
     "max-height: 30px;"
-    "image: url(:icons/arrow-circle.png"");"
+    "image: url(:icons/arrow-circle);"
   "}"
   "QPushButton:hover {"
-    "image: url(:icons/arrow-circle-hover.png"");"
+    "image: url(:icons/arrow-circle-hover);"
   "}"
     "QPushButton:checked {"
-    "image: url(:icons/arrow-circle-up.png"");"
+    "image: url(:icons/arrow-circle-up);"
   "}"
   "QPushButton:checked:hover {"
-    "image: url(:icons/arrow-circle-up-hover.png"");"
+    "image: url(:icons/arrow-circle-up-hover);"
   "}";
 
 }
@@ -174,7 +174,7 @@ void TransactionsDelegate::drawTransfers(QPainter* _painter, const QStyleOptionV
 void TransactionsDelegate::drawShowTransfersButton(QPainter* _painter, const QStyleOptionViewItem& _option, const QModelIndex& _index) const {
   bool transfersIsVisible = _index.data(TransactionsModel::ROLE_SHOW_TRANSFERS).toBool();
   bool isHovered = (_option.state & QStyle::State_MouseOver);
-  QString pixmapFile = ":icons/arrow-circle.png""";
+  QString pixmapFile = ":icons/arrow-circle";
   pixmapFile.append(transfersIsVisible ? "-up" : "");
   pixmapFile.append(isHovered ? "-hover" : "");
   QPixmap pixmap(pixmapFile);

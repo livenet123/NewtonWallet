@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
@@ -23,6 +23,7 @@
 #include "Application/IWalletUiItem.h"
 #include "IAddressBookManager.h"
 #include "IApplicationEventHandler.h"
+#include "Gui/AddressBook/AddressBookFrame.h"
 #include "ICryptoNoteAdapter.h"
 #include "IWalletAdapter.h"
 
@@ -35,6 +36,7 @@ namespace WalletGui {
 class ICryptoNoteAdapter;
 class SendGlassFrame;
 class TransferFrame;
+class AddressProvider;
 
 class SendFrame : public QFrame, public IWalletUiItem, public IWalletAdapterObserver, public IApplicationEventHandlerObserver,
   public ICryptoNoteAdapterObserver {
@@ -45,7 +47,7 @@ public:
   explicit SendFrame(QWidget* _parent);
   ~SendFrame();
 
-  void addRecipient(const QString& _address);
+  void addRecipient(const RecepientPair& _data);
 
   // IWalletUiItem
   virtual void setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) override;
@@ -87,6 +89,12 @@ private:
   SendGlassFrame* m_glassFrame;
   QAbstractItemModel* m_walletStateModel;
   QAbstractItemModel* m_addressBookModel;
+  AddressProvider* m_addressProvider;
+
+  QString remote_node_fee_address;
+  quint64 remote_node_fee;
+  quint64 total_amount;
+  bool on_remote = false;
 
   void processTranactionSendStatus(IWalletAdapter::SendTransactionStatus _status);
   void setPaymentIdError(bool _error);
@@ -94,6 +102,7 @@ private:
   void updateSliderStyleSheet();
   void amountStringChanged(const QString& _amountString);
   void addressChanged(const QString& _address);
+  void onAddressFound(const QString& _address);
   bool readyToSend() const;
 
   Q_SLOT void addRecipientClicked();
@@ -101,6 +110,8 @@ private:
   Q_SLOT void sendClicked();
   Q_SLOT void mixinValueChanged(int _value);
   Q_SLOT void validatePaymentId(const QString& _paymentId);
+  Q_SLOT void generatePaymentIdClicked();
+  Q_SLOT void insertPaymentIdReceived(const QString& _paymentId);
 
 Q_SIGNALS:
   void showTransactionsFrameSignal();

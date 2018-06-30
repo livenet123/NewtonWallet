@@ -19,9 +19,6 @@
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="locale">
-   <locale language="English" country="UnitedStates"/>
-  </property>
   <property name="frameShape">
    <enum>QFrame::NoFrame</enum>
   </property>
@@ -538,6 +535,16 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>WalletGui::WalletNormalBlueButton</class>
+   <extends>QPushButton</extends>
+   <header>Gui/Common/WalletBlueButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WalletGui::WalletHeaderLabel</class>
+   <extends>QLabel</extends>
+   <header>Gui/Common/WalletTextLabel.h</header>
+  </customwidget>
+  <customwidget>
    <class>WalletGui::WalletNormalGrayTextLabel</class>
    <extends>QLabel</extends>
    <header>Gui/Common/WalletTextLabel.h</header>
@@ -548,19 +555,9 @@
    <header>Gui/Common/WalletLinkLikeButton.h</header>
   </customwidget>
   <customwidget>
-   <class>WalletGui::WalletHeaderLabel</class>
-   <extends>QLabel</extends>
-   <header>Gui/Common/WalletTextLabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>WalletGui::WalletTableView</class>
    <extends>QTableView</extends>
    <header>Gui/Common/WalletTableView.h</header>
-  </customwidget>
-  <customwidget>
-   <class>WalletGui::WalletNormalBlueButton</class>
-   <extends>QPushButton</extends>
-   <header>Gui/Common/WalletBlueButton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,7 +1,4 @@
-libs/
 build/
+cryptonote/
+rocksdb/
 *~
-*.autosave
-*.user
-/libs/rocksdblib.lib
-/rocksdblib.lib

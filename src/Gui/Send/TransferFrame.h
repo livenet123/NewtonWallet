@@ -1,25 +1,26 @@
-// Copyright (c) 2015-2017, The intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
 #include <QFrame>
 
 #include "Application/IWalletUiItem.h"
+#include "OpenAlias/DnsLookup.h"
 
 class QCompleter;
 
@@ -67,6 +68,9 @@ public:
   virtual void setMainWindow(QWidget* _mainWindow) override;
   virtual void setAddressBookModel(QAbstractItemModel* _model) override;
 
+protected:
+  void timerEvent(QTimerEvent* _event) Q_DECL_OVERRIDE;
+
 private:
   QScopedPointer<Ui::TransferFrame> m_ui;
   ICryptoNoteAdapter* m_cryptoNoteAdapter;
@@ -74,7 +78,10 @@ private:
   QWidget* m_mainWindow;
   QAbstractItemModel* m_addressBookModel;
   QCompleter* m_addressCompleter;
+  DnsManager* m_aliasProvider;
+  int m_addressInputTimer;
 
+  void onAliasFound(const QString& _name, const QString& _address);
   void validateAmount(double _amount);
 
   Q_SLOT void amountStringChanged(const QString& _amountString);
@@ -86,6 +93,7 @@ private:
 Q_SIGNALS:
   void amountStringChangedSignal(const QString& _amountString);
   void addressChangedSignal(const QString& _address);
+  void insertPaymentIdSignal(QString _paymentid);
 };
 
 }

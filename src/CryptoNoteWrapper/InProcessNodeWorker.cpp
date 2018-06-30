@@ -1,24 +1,27 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QEventLoop>
 #include <QSemaphore>
+
+#include <boost/program_options.hpp>
+#include <boost/any.hpp>
 
 #include <functional>
 
@@ -64,7 +67,7 @@ CryptoNote::NetNodeConfig makeNetNodeConfig() {
   boost::any p2pBindPort = static_cast<uint16_t>(Settings::instance().getP2pBindPort());
   boost::any p2pExternalPort = static_cast<uint16_t>(Settings::instance().getP2pExternalPort());
   boost::any p2pAllowLocalIp = Settings::instance().hasAllowLocalIpOption();
-  boost::any dataDir = Settings::instance().getDataDir().absolutePath().toStdString();
+  boost::any dataDir = std::string(Settings::instance().getDataDir().absolutePath().toLocal8Bit().data());
   boost::any hideMyPort = Settings::instance().hasHideMyPortOption();
   options.insert(std::make_pair("p2p-bind-ip", boost::program_options::variable_value(p2pBindIp, false)));
   options.insert(std::make_pair("p2p-bind-port", boost::program_options::variable_value(p2pBindPort, false)));
@@ -204,7 +207,7 @@ IWalletAdapter* InProcessNodeWorker::getWalletAdapter() {
 }
 
 void InProcessNodeWorker::peerCountUpdated(size_t _count) {
-  WalletLogger::info(tr("[Embedded node] Event: Peer count updated: %1").arg(_count));
+  //WalletLogger::info(tr("[Embedded node] Event: Peer count updated: %1").arg(_count));
   Q_EMIT peerCountUpdatedSignal(_count);
 }
 
@@ -289,14 +292,14 @@ INodeAdapter::InitStatus InProcessNodeWorker::initCore() {
 
     CryptoNote::DataBaseConfig dbConfig;
 
-    dbConfig.setDataDir(Settings::instance().getDataDir().absolutePath().toStdString());
+    dbConfig.setDataDir(std::string(Settings::instance().getDataDir().absolutePath().toLocal8Bit().data()));
     dbConfig.setReadCacheSize(128 * 1024 * 1024);
     dbConfig.setWriteBufferSize(256 * 1024 * 1024);
     dbConfig.setTestnet(Settings::instance().isTestnet());
 
     QString blocksFilePath = Settings::instance().getDataDir().absoluteFilePath(QString::fromStdString(m_currency.blocksFileName()));
     QString indexesFilePath = Settings::instance().getDataDir().absoluteFilePath(QString::fromStdString(m_currency.blockIndexesFileName()));
-    std::unique_ptr<CryptoNote::IMainChainStorage> mainChainStorage(new CryptoNote::MainChainStorage(blocksFilePath.toStdString(), indexesFilePath.toStdString()));
+    std::unique_ptr<CryptoNote::IMainChainStorage> mainChainStorage(new CryptoNote::MainChainStorage(std::string(blocksFilePath.toLocal8Bit().data()), indexesFilePath.toStdString()));
     if (mainChainStorage->getBlockCount() == 0) {
       CryptoNote::RawBlock genesis;
       genesis.block = CryptoNote::toBinaryArray(m_currency.genesisBlock());

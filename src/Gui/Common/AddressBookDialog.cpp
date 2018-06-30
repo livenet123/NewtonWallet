@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "AddressBookDialog.h"
 #include "Models/AddressBookModel.h"
@@ -31,6 +31,7 @@ AddressBookDialog::AddressBookDialog(QAbstractItemModel* _addressBookModel, QWid
   m_ui->m_addressBookView->setItemDelegateForColumn(AddressBookModel::COLUMN_ADDRESS, new RightAlignmentColumnDelegate(true, this));
   m_ui->m_addressBookView->header()->setSectionResizeMode(AddressBookModel::COLUMN_LABEL, QHeaderView::Fixed);
   m_ui->m_addressBookView->header()->setSectionResizeMode(AddressBookModel::COLUMN_ADDRESS, QHeaderView::Stretch);
+  m_ui->m_addressBookView->header()->setSectionResizeMode(AddressBookModel::COLUMN_PAYMENT_ID, QHeaderView::Stretch);
   m_ui->m_addressBookView->header()->hideSection(AddressBookModel::COLUMN_DONATION);
   m_ui->m_addressBookView->header()->resizeSection(AddressBookModel::COLUMN_LABEL, 200);
   if (_addressBookModel->rowCount() > 0) {
@@ -43,6 +44,10 @@ AddressBookDialog::~AddressBookDialog() {
 
 QString AddressBookDialog::getAddress() const {
   return m_ui->m_addressBookView->currentIndex().data(AddressBookModel::ROLE_ADDRESS).toString();
+}
+
+QString AddressBookDialog::getPaymentId() const {
+  return m_ui->m_addressBookView->currentIndex().data(AddressBookModel::ROLE_PAYMENT_ID).toString();
 }
 
 }

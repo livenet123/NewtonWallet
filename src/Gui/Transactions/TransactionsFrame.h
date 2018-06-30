@@ -1,23 +1,25 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
 #include <QFrame>
+#include <QMenu>
+#include <QSortFilterProxyModel>
 
 #include "Application/IWalletUiItem.h"
 
@@ -36,6 +38,7 @@ class TransactionsFrame : public QFrame, public IWalletUiItem {
 public:
   explicit TransactionsFrame(QWidget* _parent);
   ~TransactionsFrame();
+  QModelIndex index;
 
   // IWalletUiItem
   virtual void setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) override;
@@ -44,6 +47,15 @@ public:
   virtual void setWalletStateModel(QAbstractItemModel* _model) override;
   virtual void setTransactionsModel(QAbstractItemModel* _model) override;
   virtual void setSortedTransactionsModel(QAbstractItemModel* _model) override;
+
+public slots:
+  void onCustomContextMenu(const QPoint &point);
+
+public Q_SLOTS:
+  void copyTxHash();
+  void copyAmount();
+  void copyPaymentID();
+  void showTxDetails();
 
 private:
   QScopedPointer<Ui::TransactionsFrame> m_ui;
@@ -57,6 +69,7 @@ private:
   QAbstractItemModel* m_filterByHashModel;
   QAbstractItemModel* m_filterByAddressModel;
   QPropertyAnimation* m_animation;
+  QMenu* contextMenu;
 
   void rowsInserted(const QModelIndex& _parent, int _first, int _last);
   void resetFilter();

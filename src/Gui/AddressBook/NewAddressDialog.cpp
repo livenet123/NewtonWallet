@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "NewAddressDialog.h"
 #include "IAddressBookManager.h"
@@ -21,6 +21,7 @@
 #include "ICryptoNoteAdapter.h"
 #include "Models/AddressBookModel.h"
 #include "ui_NewAddressDialog.h"
+#include <QStyle>
 
 namespace WalletGui {
 
@@ -37,6 +38,7 @@ NewAddressDialog::NewAddressDialog(ICryptoNoteAdapter* _cryptoNoteAdapter, IAddr
   setWindowTitle(tr("Edit address"));
   m_ui->m_labelEdit->setText(_index.data(AddressBookModel::ROLE_LABEL).toString());
   m_ui->m_addressEdit->setText(_index.data(AddressBookModel::ROLE_ADDRESS).toString());
+  m_ui->m_paymentIdEdit->setText(_index.data(AddressBookModel::ROLE_PAYMENT_ID).toString());
   m_ui->m_donationCheck->setChecked(_index.data(AddressBookModel::ROLE_IS_DONATION_ADDRESS).toBool());
   setAddressDuplicationError(false);
   setLabelDuplicationError(false);
@@ -51,6 +53,10 @@ QString NewAddressDialog::getAddress() const {
 
 QString NewAddressDialog::getLabel() const {
   return m_ui->m_labelEdit->text();
+}
+
+QString NewAddressDialog::getPaymentId() const {
+  return m_ui->m_paymentIdEdit->text();
 }
 
 void NewAddressDialog::setAddressError(bool _error) {
@@ -86,6 +92,39 @@ void NewAddressDialog::setAddressDuplicationError(bool _error) {
      !m_ui->m_addressEdit->text().trimmed().isEmpty());
 }
 
+void NewAddressDialog::setPaymentIdError(bool _error) {
+  m_ui->m_paymentIdEdit->setProperty("errorState", _error);
+  m_ui->m_paymentIdTextLabel->setProperty("errorState", _error);
+  m_ui->m_paymentIdTextLabel->setText(_error ? tr("INVALID PAYMENT ID") : tr("PAYMENT ID"));
+
+  m_ui->m_paymentIdEdit->style()->unpolish(m_ui->m_paymentIdEdit);
+  m_ui->m_paymentIdEdit->style()->polish(m_ui->m_paymentIdEdit);
+  m_ui->m_paymentIdEdit->update();
+
+  m_ui->m_paymentIdTextLabel->style()->unpolish(m_ui->m_paymentIdTextLabel);
+  m_ui->m_paymentIdTextLabel->style()->polish(m_ui->m_paymentIdTextLabel);
+  m_ui->m_paymentIdTextLabel->update();
+  m_ui->m_okButton->setEnabled(!checkForErrors() && !m_ui->m_labelEdit->text().trimmed().isEmpty() &&
+                               !m_ui->m_addressEdit->text().trimmed().isEmpty());
+}
+
+void NewAddressDialog::setPaymentIdDuplicationError(bool _error) {
+  m_ui->m_paymentIdEdit->setProperty("errorState", _error);
+  m_ui->m_paymentIdTextLabel->setProperty("errorState", _error);
+  m_ui->m_paymentIdTextLabel->setText(_error ? tr("ALREADY IN THE ADDRESS BOOK") : tr("PAYMENT ID"));
+
+  m_ui->m_paymentIdEdit->style()->unpolish(m_ui->m_paymentIdEdit);
+  m_ui->m_paymentIdEdit->style()->polish(m_ui->m_paymentIdEdit);
+  m_ui->m_paymentIdEdit->update();
+
+  m_ui->m_paymentIdTextLabel->style()->unpolish(m_ui->m_paymentIdTextLabel);
+  m_ui->m_paymentIdTextLabel->style()->polish(m_ui->m_paymentIdTextLabel);
+  m_ui->m_paymentIdTextLabel->update();
+
+  m_ui->m_okButton->setEnabled(!checkForErrors() && !m_ui->m_addressEdit->text().trimmed().isEmpty() &&
+                               !m_ui->m_labelEdit->text().trimmed().isEmpty());
+}
+
 void NewAddressDialog::setLabelDuplicationError(bool _error) {
   m_ui->m_labelEdit->setProperty("errorState", _error);
   m_ui->m_labelTextLabel->setProperty("errorState", _error);
@@ -100,7 +139,7 @@ void NewAddressDialog::setLabelDuplicationError(bool _error) {
   m_ui->m_labelTextLabel->update();
 
   m_ui->m_okButton->setEnabled(!checkForErrors() && !m_ui->m_labelEdit->text().trimmed().isEmpty() &&
-     !m_ui->m_addressEdit->text().trimmed().isEmpty());
+                               !m_ui->m_addressEdit->text().trimmed().isEmpty());
 }
 
 bool NewAddressDialog::checkForErrors() const {
@@ -117,6 +156,18 @@ void NewAddressDialog::validateAddress(const QString& _address) {
   QString address = getAddress().trimmed();
   quintptr addressIndex = m_addressBookManager->findAddressByAddress(address);
   setAddressDuplicationError(addressIndex != std::numeric_limits<quintptr>::max());
+}
+
+void NewAddressDialog::validatePaymentId(const QString& _paymentid) {
+  bool isInvalidPaymentId = (!_paymentid.isEmpty() && !m_cryptoNoteAdapter->isValidPaymentId(_paymentid));
+  if (isInvalidPaymentId) {
+    setPaymentIdError(true);
+    return;
+  }
+
+  QString paymentid = getPaymentId().trimmed();
+  quintptr addressIndex = m_addressBookManager->findAddressByPaymentId(paymentid);
+  setPaymentIdDuplicationError(addressIndex != std::numeric_limits<quintptr>::max());
 }
 
 void NewAddressDialog::validateLabel(const QString& _label) {

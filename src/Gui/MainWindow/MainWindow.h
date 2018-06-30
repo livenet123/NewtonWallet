@@ -1,24 +1,25 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
 #include <QMainWindow>
 
+#include "CryptoNoteWrapper/DeterministicWalletAdapter.h"
 #include "IApplicationEventHandler.h"
 #include "ICryptoNoteAdapter.h"
 #include "IWalletAdapter.h"
@@ -89,6 +90,7 @@ private:
   IMiningManager* m_miningManager;
   IApplicationEventHandler* m_applicationEventHandler;
   INewsReader* m_blogReader;
+  DeterministicWalletAdapter m_deterministicAdapter;
   QAbstractItemModel* m_nodeStateModel;
   QAbstractItemModel* m_walletStateModel;
   QAbstractItemModel* m_transactionsModel;
@@ -105,6 +107,7 @@ private:
   QString m_styleSheetTemplate;
   QDataWidgetMapper* m_walletStateMapper;
   QMovie* m_syncMovie;
+  QString m_address;
 
   void createRecentWalletMenu();
   void updateRecentWalletActions();
@@ -115,9 +118,13 @@ private:
   void addRecipientTriggered();
   void commitData(QSessionManager& _manager);
   void walletStateModelDataChanged(const QModelIndex& _topLeft, const QModelIndex& _bottomRight, const QVector<int>& _roles);
+  void setDevDonation();
+  void getMnemonicSeed();
 
   Q_SLOT void createWallet();
+  Q_SLOT void createNonDeterministicWallet();
   Q_SLOT void openWallet();
+  Q_SLOT void closeWallet();
   Q_SLOT void backupWallet();
   Q_SLOT void saveWalletKeys();
   Q_SLOT void resetWallet();
@@ -135,6 +142,11 @@ private:
   Q_SLOT void showPreferences();
   Q_SLOT void communityForumTriggered();
   Q_SLOT void reportIssueTriggered();
+  Q_SLOT void showQrCode();
+  Q_SLOT void showMnemonicSeed();
+  Q_SLOT void restoreFromMnemonicSeed();
+  Q_SLOT void createPaymentRequestClicked();
+  Q_SLOT void openPaymentRequestClicked();
 
 Q_SIGNALS:
   void reinitCryptoNoteAdapterSignal();

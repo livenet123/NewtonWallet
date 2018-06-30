@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Newton.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QEventLoop>
 #include <QThread>
@@ -33,14 +33,14 @@ namespace WalletGui {
 namespace {
 
 const int AUTO_CONNECTION_INTERVAL = 1000;
-const char OLD_CORE_LOG_FILE_NAME[] = "intrinsiccoinwallet.log";
+const char OLD_CORE_LOG_FILE_NAME[] = "NewtonWallet.log";
 
 }
 
 CryptoNoteAdapter::CryptoNoteAdapter(const QDir& _dataDir, bool _testnet, bool _debug, QObject* _parent) : QObject(_parent),
   m_dataDir(_dataDir), m_testnet(_testnet), m_debug(_debug), m_connectionMethod(ConnectionMethod::AUTO),
   m_localDaemodPort(CryptoNote::RPC_DEFAULT_PORT), m_remoteDaemonUrl(), m_coreLogger(), m_walletLogger(),
-  m_currency(CryptoNote::CurrencyBuilder(m_coreLogger).testnet(m_testnet).currency()),
+  m_currency(CryptoNote::CurrencyBuilder(m_coreLogger).currency()),
   m_nodeAdapter(nullptr), m_autoConnectionTimerId(-1) {
 }
 
@@ -396,7 +396,7 @@ void CryptoNoteAdapter::configureLogger(Logging::LoggerManager& _logger, const Q
   Common::JsonValue& cfgLoggers = loggerConfiguration.insert("loggers", Common::JsonValue::ARRAY);
   Common::JsonValue& fileLogger = cfgLoggers.pushBack(Common::JsonValue::OBJECT);
   fileLogger.insert("type", "file");
-  fileLogger.insert("filename", _logFilePath.toStdString());
+  fileLogger.insert("filename", std::string(_logFilePath.toLocal8Bit().data()));
   fileLogger.insert("level", static_cast<int64_t>(level));
   _logger.configure(loggerConfiguration);
 }

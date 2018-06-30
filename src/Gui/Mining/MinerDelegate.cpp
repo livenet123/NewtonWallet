@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAbstractItemView>
 
@@ -37,7 +37,7 @@ void MinerRemoveDelegate::paint(QPainter* _painter, const QStyleOptionViewItem& 
       initStyleOption(&opt, _index);
       QRect pixmapRect = opt.widget->style()->subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, opt.widget);
       opt.widget->style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, _painter, opt.widget);
-      opt.widget->style()->drawItemPixmap(_painter, pixmapRect, opt.displayAlignment, QPixmap("C:/Users/alaa/source/repos/Newtonwallet/src/icons/delete_pool_hover.png"));
+      opt.widget->style()->drawItemPixmap(_painter, pixmapRect, opt.displayAlignment, QPixmap(":icons/delete_pool_hover"));
       return;
     }
   }

@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDir>
 #include <QEventLoop>
@@ -111,7 +111,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::create(const QString& _walle
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
-      m_wallet->initialize(_walletPath.toStdString(), _password.toStdString());
+      m_wallet->initialize(std::string(_walletPath.toLocal8Bit().data()), _password.toStdString());
       m_wallet->createAddress();
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Generate wallet error: %1").arg(_error.code().message().data()));
@@ -147,7 +147,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::load(const QString& _walletP
     int errorCode = 0;
     try {
       std::string userData;
-      m_wallet->load(_walletPath.toStdString(), _password.toStdString(), userData);
+      m_wallet->load(std::string(_walletPath.toLocal8Bit().data()), _password.toStdString(), userData);
 #if QT_VERSION <  0x050400
       m_userData = QByteArray(userData.data(), userData.size());
 #else
@@ -195,10 +195,10 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::loadLegacyKeys(const QString
     int errorCode = 0;
     try {
       std::ofstream outputStream(_walletPath.toStdString(), std::ios::binary | std::ios::trunc);
-      CryptoNote::importLegacyKeys(_legacyKeysFile.toStdString(), _password.toStdString(), outputStream);
+      CryptoNote::importLegacyKeys(std::string(_legacyKeysFile.toLocal8Bit().data()), _password.toStdString(), outputStream);
       outputStream.flush();
       outputStream.close();
-      m_wallet->load(_walletPath.toStdString(), _password.toStdString());
+      m_wallet->load(std::string(_walletPath.toLocal8Bit().data()), _password.toStdString());
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Import keys from file error: %1").arg(_error.code().message().data()));
       errorCode = _error.code().value();
@@ -239,7 +239,7 @@ IWalletAdapter::WalletInitStatus WalletGreenWorker::createWithKeys(const QString
     SemaphoreUnlocker unlocker(m_walletSemaphore);
     int errorCode = 0;
     try {
-      m_wallet->initializeWithViewKey(_walletPath.toStdString(), "", _accountKeys.viewKeys.secretKey);
+      m_wallet->initializeWithViewKey(std::string(_walletPath.toLocal8Bit().data()), "", _accountKeys.viewKeys.secretKey);
       if (std::memcmp(&_accountKeys.spendKeys.secretKey, &CryptoNote::NULL_SECRET_KEY, sizeof(Crypto::SecretKey)) == 0) {
         m_wallet->createAddress(_accountKeys.spendKeys.publicKey);
       } else {
@@ -322,9 +322,9 @@ IWalletAdapter::WalletSaveStatus WalletGreenWorker::exportWallet(const QString& 
     int errorCode = 0;
     try {
 #if QT_VERSION < 0x050400
-      m_wallet->exportWallet(_path.toStdString(), _encrypt, _saveLevel, std::string(m_userData.data(), m_userData.size()));
+      m_wallet->exportWallet(std::string(_path.toLocal8Bit().data()), _encrypt, _saveLevel, std::string(m_userData.data(), m_userData.size()));
 #else
-      m_wallet->exportWallet(_path.toStdString(), _encrypt, _saveLevel, m_userData.toStdString());
+      m_wallet->exportWallet(std::string(_path.toLocal8Bit().data()), _encrypt, _saveLevel, m_userData.toStdString());
 #endif
     } catch (const std::system_error& _error) {
       WalletLogger::critical(tr("[Wallet] Export error: %1").arg(_error.code().message().data()));

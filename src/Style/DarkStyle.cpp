@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "DarkStyle.h"
 
@@ -24,11 +24,11 @@ DarkStyle::DarkStyle() : Style("dark", "Dark") {
 }
 
 QString DarkStyle::statusBarBackgroundColor() const {
-  return "#330033"; //#202020
+  return "#202020";
 }
 
 QString DarkStyle::statusBarFontColor() const {
-  return "#ffffff"; 
+  return "#ffffff";
 }
 
 QString DarkStyle::headerBackgroundColor() const {
@@ -72,35 +72,35 @@ QString DarkStyle::toolBarBorderColor() const {
 }
 
 QString DarkStyle::getWalletSyncGifFile() const {
-  return QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/wallet-sync.png");
+  return QString(":icons/dark/wallet-sync");
 }
 
 QPixmap DarkStyle::getLogoPixmap() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/logo_bl.png"));
+  return QPixmap(QString(":icons/dark/logo"));
 }
 
 QPixmap DarkStyle::getBalanceIcon() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/balance.png"));
+  return QPixmap(QString(":icons/dark/balance"));
 }
 
 QPixmap DarkStyle::getConnectedIcon() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/connected.png"));
+  return QPixmap(QString(":icons/dark/connected"));
 }
 
 QPixmap DarkStyle::getDisconnectedIcon() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/disconnected.png"));
+  return QPixmap(QString(":icons/dark/disconnected"));
 }
 
 QPixmap DarkStyle::getEncryptedIcon() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/encrypted.png"));
+  return QPixmap(QString(":icons/dark/encrypted"));
 }
 
 QPixmap DarkStyle::getNotEncryptedIcon() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/decrypted.png"));
+  return QPixmap(QString(":icons/dark/decrypted"));
 }
 
 QPixmap DarkStyle::getSyncedIcon() const {
-  return QPixmap(QString("C:/Users/alaa/source/repos/Newtonwallet/src/icons/synced.png"));
+  return QPixmap(QString(":icons/dark/synced"));
 }
 
 }

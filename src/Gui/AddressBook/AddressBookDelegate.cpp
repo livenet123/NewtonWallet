@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QClipboard>
@@ -43,24 +43,29 @@ QWidget* AddressBookDelegate::createEditor(QWidget* _parent, const QStyleOptionV
   menu->setObjectName("m_addressBookMenu");
   QAction* sendAction = new QAction(tr("Send"), menu);
   QAction* editAction = new QAction(tr("Edit"), menu);
-  QAction* copyAction = new QAction(tr("Copy to clipboard"), menu);
+  QAction* copyAction = new QAction(tr("Copy address to clipboard"), menu);
+  QAction* copyPaymentIdAction = new QAction(tr("Copy Payment ID to clipboard"), menu);
   QAction* delAction = new QAction(tr("Delete"), menu);
   menu->addAction(sendAction);
   menu->addAction(editAction);
   menu->addAction(copyAction);
+  menu->addAction(copyPaymentIdAction);
   menu->addAction(delAction);
 
   editor->setMenu(menu);
   editor->setCursor(Qt::PointingHandCursor);
   QPersistentModelIndex index(_index);
   connect(sendAction, &QAction::triggered, [this, index]() {
-      Q_EMIT sendToSignal(index.data(AddressBookModel::ROLE_ADDRESS).toString());
+      Q_EMIT sendToSignal(index.data(AddressBookModel::ROLE_ADDRESS).toString(), index.data(AddressBookModel::ROLE_PAYMENT_ID).toString());
     });
   connect(editAction, &QAction::triggered, [this, index]() {
       Q_EMIT editSignal(index);
     });
   connect(copyAction, &QAction::triggered, [index]() {
       QApplication::clipboard()->setText(index.data(AddressBookModel::ROLE_ADDRESS).toString());
+    });
+  connect(copyPaymentIdAction, &QAction::triggered, [index]() {
+      QApplication::clipboard()->setText(index.data(AddressBookModel::ROLE_PAYMENT_ID).toString());
     });
   connect(delAction, &QAction::triggered, [this, index]() {
       Q_EMIT deleteSignal(index);

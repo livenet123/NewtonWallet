@@ -1,29 +1,34 @@
-// Copyright (c) 2015-2017, The intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <QMetaMethod>
 #include <QUrl>
+#include <QTime>
+#include <QPair>
 #include <QUrlQuery>
+#include <QMessageBox>
+#include <QMetaMethod>
+#include <QStyle>
 
 #include <Wallet/WalletErrors.h>
 
 #include "SendFrame.h"
 #include "Settings/Settings.h"
 #include "Gui/Common/QuestionDialog.h"
+#include "Gui/Common/OpenUriDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "IDonationManager.h"
 #include "INodeAdapter.h"
@@ -33,6 +38,8 @@
 #include "SendGlassFrame.h"
 #include "Style/Style.h"
 #include "TransferFrame.h"
+#include "AddressProvider.h"
+#include "CryptoNoteWrapper/CryptoNoteAdapter.h"
 
 #include "ui_SendFrame.h"
 
@@ -42,7 +49,7 @@ namespace {
 
 const char SEND_FRAME_STYLE_SHEET[] =
   "WalletGui--SendFrame {"
-    "background-color: #e7ffb3;" //#ffffff
+    "background-color: #ffffff;"
     "border: none;"
   "}"
 
@@ -58,7 +65,7 @@ const char SEND_FRAME_STYLE_SHEET[] =
   "}"
 
   "WalletGui--SendFrame #scrollAreaWidgetContents {"
-    "background-color: #e7ffb3;" //#ffffff
+    "background-color: #ffffff;"
     "border: none;"
   "}"
 
@@ -69,10 +76,10 @@ const char SEND_FRAME_STYLE_SHEET[] =
   "}";
 
 const quint64 MAXIMUM_UNSYNCED_BLOCKS_WHEN_SEND_AVAILABLE = 5;
-const quint64 DEFAULT_MIXIN_VALUE = 1;
-const quint64 MAX_MIXIN_VALUE = 1000;
-const quint64 CRITICAL_MIXIN_BOUND = 3;
-const quint64 NORMAL_MIXIN_BOUND = 4;
+const quint64 DEFAULT_MIXIN_VALUE = 2;
+const quint64 MAX_MIXIN_VALUE = 10;
+const quint64 CRITICAL_MIXIN_BOUND = 0;
+const quint64 NORMAL_MIXIN_BOUND = 2;
 const char PAYMENT_URL_AMOUNT_TAG[] = "amount";
 const char PAYMENT_URL_PAYMENT_ID_TAG[] = "payment_id";
 const char PAYMENT_URL_MESSAGE_TAG[] = "message";
@@ -101,12 +108,21 @@ bool isValidPaymentId(const QString& _paymentIdString) {
 
 SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame),
   m_cryptoNoteAdapter(nullptr), m_donationManager(nullptr), m_applicationEventHandler(nullptr), m_mainWindow(nullptr),
-  m_glassFrame(new SendGlassFrame(nullptr)), m_walletStateModel(nullptr) {
+  m_glassFrame(new SendGlassFrame(nullptr)), m_walletStateModel(nullptr), m_addressProvider(new AddressProvider(this)) {
   m_ui->setupUi(this);
   m_glassFrame->setObjectName("m_sendGlassFrame");
   m_ui->m_mixinSpin->setMaximum(MAX_MIXIN_VALUE);
   mixinValueChanged(m_ui->m_mixinSlider->value());
   setStyleSheet(Settings::instance().getCurrentStyle().makeStyleSheet(SEND_FRAME_STYLE_SHEET));
+  remote_node_fee = 0;
+
+  ConnectionMethod currentConnectionMethod = Settings::instance().getConnectionMethod();
+  if(currentConnectionMethod == ConnectionMethod::REMOTE) {
+    on_remote = true;
+    QUrl currentRemoteRpcUrl = Settings::instance().getRemoteRpcUrl();
+    m_addressProvider->getAddress(currentRemoteRpcUrl);
+    connect(m_addressProvider, &AddressProvider::addressFoundSignal, this, &SendFrame::onAddressFound, Qt::QueuedConnection);
+  }
 }
 
 SendFrame::~SendFrame() {
@@ -114,15 +130,16 @@ SendFrame::~SendFrame() {
   m_glassFrame->deleteLater();
 }
 
-void SendFrame::addRecipient(const QString& _address) {
+void SendFrame::addRecipient(const RecepientPair &_data) {
   if (m_transfers.size() == 1 && m_transfers[0]->getAddress().isEmpty()) {
-    m_transfers[0]->setAddress(_address);
+    m_transfers[0]->setAddress(_data.first);
   } else {
     addRecipientClicked();
     m_ui->m_sendScrollarea->widget()->updateGeometry();
     m_ui->m_sendScrollarea->updateGeometry();
-    m_transfers.last()->setAddress(_address);
+    m_transfers.last()->setAddress(_data.first);
   }
+  m_ui->m_paymentIdEdit->setText(_data.second);
 }
 
 void SendFrame::setCryptoNoteAdapter(ICryptoNoteAdapter* _cryptoNoteAdapter) {
@@ -230,7 +247,11 @@ void SendFrame::urlReceived(const QUrl& _url) {
 
   QUrlQuery urlQuery(_url);
   QString address = _url.path();
-  qreal amount = QLocale(QLocale::English).toDouble(m_cryptoNoteAdapter->formatUnsignedAmount(urlQuery.queryItemValue(PAYMENT_URL_AMOUNT_TAG).toULongLong()));
+  if (!m_cryptoNoteAdapter->isValidAddress(address)) {
+    QMessageBox::warning(this, tr("Warning"), tr("Address is invalid"));
+    return;
+  }
+  qreal amount = QLocale(QLocale::English).toDouble(urlQuery.queryItemValue(PAYMENT_URL_AMOUNT_TAG));
   QString paymentId = urlQuery.queryItemValue(PAYMENT_URL_PAYMENT_ID_TAG);
   QString message = urlQuery.queryItemValue(PAYMENT_URL_MESSAGE_TAG);
   Q_UNUSED(message)
@@ -301,6 +322,7 @@ void SendFrame::addRecipientClicked() {
     amountStringChanged(QString());
     m_ui->m_sendButton->setEnabled(readyToSend());
   });
+  connect(newTransfer, &TransferFrame::insertPaymentIdSignal, this, &SendFrame::insertPaymentIdReceived);
 
   m_ui->m_sendScrollarea->widget()->adjustSize();
   m_ui->m_sendScrollarea->widget()->updateGeometry();
@@ -323,6 +345,7 @@ void SendFrame::clearAll() {
   m_ui->m_sendScrollarea->widget()->adjustSize();
   m_ui->m_sendScrollarea->widget()->updateGeometry();
   m_ui->m_sendScrollarea->updateGeometry();
+  amountStringChanged(QString());
 }
 
 
@@ -353,7 +376,7 @@ void SendFrame::sendClicked() {
     }
 
     transferSum += amount;
-    if (transferSum + fee > actualBalance) {
+    if (transferSum + fee + remote_node_fee > actualBalance) {
       transfer->setInsufficientFundsError();
       m_ui->m_sendScrollarea->ensureWidgetVisible(transfer);
       return;
@@ -364,8 +387,16 @@ void SendFrame::sendClicked() {
     QString label = transfer->getLabel();
     if (!label.isEmpty() && m_addressBookManager->findAddressByAddress(address) == INVALID_ADDRESS_INDEX &&
       m_addressBookManager->findAddressByLabel(label) == INVALID_ADDRESS_INDEX) {
-      m_addressBookManager->addAddress(label, address, false);
+      m_addressBookManager->addAddress(label, address, m_ui->m_paymentIdEdit->text(), false);
     }
+  }
+
+  // Remote node fee
+  if(on_remote && !remote_node_fee_address.isEmpty()) {
+    CryptoNote::WalletOrder walletTransfer;
+    walletTransfer.address = remote_node_fee_address.toStdString();
+    walletTransfer.amount = remote_node_fee;
+    transactionParameters.destinations.push_back(walletTransfer);
   }
 
   if (fee < m_cryptoNoteAdapter->getMinimalFee()) {
@@ -393,6 +424,17 @@ void SendFrame::sendClicked() {
     qreal donationCoeff = donationAmount / 100. / 10.;
     transactionParameters.donation.address = donationAddress.toStdString();
     transactionParameters.donation.threshold = transferSum * donationCoeff;
+  }
+
+  QuestionDialog confirmDlg(QString(tr("Confirm sending %1 NCP")).arg(m_cryptoNoteAdapter->formatUnsignedAmount(transferSum)),
+    m_ui->m_paymentIdEdit->text().isEmpty() ? QString(tr("<html><head/><body><p>Are you sure you want to send <strong>%1 NCP</strong> "
+    "<strong>without Payment ID?</strong></p></body></html>")).arg(m_cryptoNoteAdapter->formatUnsignedAmount(transferSum)) :
+    QString(tr("<html><head/><body><p>Are you sure you want to send <strong>%1 NCP</strong> with Payment ID:</p>"
+    "<p><strong>%2</strong>?</p></body></html>")).arg(m_cryptoNoteAdapter->formatUnsignedAmount(transferSum)).arg(m_ui->m_paymentIdEdit->text()),
+    m_mainWindow);
+  confirmDlg.setMinimumHeight(100);
+  if (confirmDlg.exec() == QDialog::Rejected) {
+    return;
   }
 
   IWalletAdapter::SendTransactionStatus status = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->sendTransaction(transactionParameters);
@@ -511,10 +553,25 @@ void SendFrame::amountStringChanged(const QString& _amountString) {
 
   m_ui->m_totalAmountLabel->setText(QString("%1 %2").arg(m_cryptoNoteAdapter->formatUnsignedAmount(totalSendAmount)).
   arg(m_cryptoNoteAdapter->getCurrencyTicker().toUpper()));
+
+  remote_node_fee = 0;
+  if (!remote_node_fee_address.isEmpty() ) {
+       remote_node_fee = totalSendAmount * 0.25 / 100; // fee is 0.25%
+    if (remote_node_fee < m_cryptoNoteAdapter->getMinimalFee()) {
+        remote_node_fee = m_cryptoNoteAdapter->getMinimalFee();
+    }
+    if (remote_node_fee > 10000000000000) {
+        remote_node_fee = 10000000000000;
+    }
+  }
 }
 
 void SendFrame::addressChanged(const QString& _address) {
   m_ui->m_sendButton->setEnabled(readyToSend());
+}
+
+void SendFrame::onAddressFound(const QString& _address) {
+  remote_node_fee_address = _address;
 }
 
 bool SendFrame::readyToSend() const {
@@ -525,6 +582,25 @@ bool SendFrame::readyToSend() const {
 
   readyToSend = readyToSend && isValidPaymentId(m_ui->m_paymentIdEdit->text());
   return readyToSend;
+}
+
+void SendFrame::generatePaymentIdClicked() {
+  QTime time = QTime::currentTime();
+  qsrand((uint)time.msec());
+  const QString possibleCharacters("ABCDEF0123456789");
+  const int randomStringLength = 64;
+  QString randomString;
+  for(int i=0; i<randomStringLength; ++i)
+  {
+    int index = qrand() % possibleCharacters.length();
+    QChar nextChar = possibleCharacters.at(index);
+    randomString.append(nextChar);
+  }
+  m_ui->m_paymentIdEdit->setText(randomString);
+}
+
+void SendFrame::insertPaymentIdReceived(const QString& _paymentId) {
+  m_ui->m_paymentIdEdit->setText(_paymentId);
 }
 
 }

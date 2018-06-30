@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QIcon>
 
@@ -44,7 +44,7 @@ int Style::viewItemHeight() const {
 }
 
 QString Style::fontColorGray() const {
-  return "#888888";
+  return "#808080"; // "#888888";
 }
 
 QString Style::fontColorGreen() const {
@@ -56,35 +56,35 @@ QString Style::fontColorRed() const {
 }
 
 QString Style::fontColorBlueNormal() const {
-  return "#993399"; //#0580e8
+  return "#0580e8"; // #993399
 }
 
 QString Style::fontColorBlueHover() const {
-  return "#862d86"; //005faf
+  return "#005faf"; // #862d86
 }
 
 QString Style::fontColorBluePressed() const {
-  return "#ac39ac"; //0580e8
+  return "#0580e8"; // #ac39ac
 }
 
 QString Style::backgroundColorGray() const {
-  return "#d5ff80"; //#f4f4f4
+  return "#f4f4f4"; // #d5ff80
 }
 
 QString Style::backgroundButtonColorGrayHover() const {
-  return "#e6ffb3"; //#fbfbfb
+  return "#fbfbfb"; // #e6ffb3
 }
 
 QString Style::backgroundColorBlueNormal() const {
-  return "#993399"; //#4197d1
+  return "#4197d1"; // #993399
 }
 
 QString Style::backgroundColorBlueHover() const {
-  return "#cc66cc"; //3dacf1
+  return "#3dacf1"; // #cc66cc
 }
 
 QString Style::backgroundColorBluePressed() const {
-  return "#c653c6"; //#4197d1
+  return "#4197d1"; // #c653c6
 }
 
 QString Style::backgroundColorBlueDisabled() const {
@@ -92,19 +92,19 @@ QString Style::backgroundColorBlueDisabled() const {
 }
 
 QString Style::backgroundColorGrayNormal() const {
-  return "#bbff33"; //#9e9e9e
+  return "#9e9e9e"; // #bbff33
 }
 
 QString Style::backgroundColorGrayHover() const {
-  return "#c4ff4d"; //a8a8a8
+  return "#a8a8a8"; // #c4ff4d
 }
 
 QString Style::backgroundColorGrayPressed() const {
-  return "#d5ff80"; //#bfbebe
+  return "#bfbebe"; // #d5ff80
 }
 
 QString Style::backgroundColorGreen() const {
-	return "#993399"; //fontColorGreen();
+  return fontColorGreen(); // "#993399";
 }
 
 QString Style::backgroundColorGreenHover() const {
@@ -112,7 +112,7 @@ QString Style::backgroundColorGreenHover() const {
 }
 
 QString Style::backgroundColorAlternate() const {
-  return "#f7ffe6"; //#f3f4f6
+  return "#f3f4f6"; // #f7ffe6
 }
 
 QString Style::borderColor() const {
@@ -124,7 +124,7 @@ QString Style::borderColorDark() const {
 }
 
 QString Style::selectionColor() const {
-  return "#cc66cc"; //5f9cc7
+  return "#5f9cc7"; // #cc66cc
 }
 
 QString Style::glassColor() const {
@@ -133,13 +133,11 @@ QString Style::glassColor() const {
 
 QIcon Style::getSystemTrayIcon() const {
 #ifdef Q_OS_MAC
-  return QIcon(":images/Newton.icns");
+  return QIcon(":images/Newton_mac");
 #elif defined(Q_OS_LINUX)
-  return QIcon(":images/Newton.xpm");
+  return QIcon(":images/Newton_lin");
 #elif defined(Q_OS_WIN)
-  return QIcon("C:/Users/alaa/source/repos/Newtonwallet/src/images/Newton.ico");
-#else
-	return QIcon("C:/Users/alaa/source/repos/Newtonwallet/src/images/Newton.ico");
+  return QIcon(":images/Newton_win");
 #endif
 }
 

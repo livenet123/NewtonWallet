@@ -98,16 +98,13 @@
     </qresource>
     <qresource prefix="/images">
         <file alias="splash">images/splash.png</file>
-        <file alias="bytecoin_lin">images/Newton.png</file>
+        <file alias="Newton_lin">images/Newton.png</file>
         <file alias="add_address_helper">images/add_address_helper.png</file>
-        <file alias="bytecoin_mac">images/Newton.icns</file>
-        <file alias="bytecoin_win">images/Newton.ico</file>
         <file alias="Newton_mac">images/Newton.icns</file>
         <file alias="Newton_win">images/Newton.ico</file>
-        <file alias="Newton_lin">images/Newton.png</file>
     </qresource>
     <qresource prefix="/style">
-        <file alias="qss">Newtoncoinwallet.qss</file>
+        <file alias="qss">NewtonWallet.qss</file>
     </qresource>
     <qresource prefix="/font">
         <file alias="Bold">font/OpenSans-Bold.ttf</file>

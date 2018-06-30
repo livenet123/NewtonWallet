@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QMouseEvent>
 #include <QScrollBar>
@@ -38,7 +38,7 @@ const char WALLET_VIEW_STYLE_SHEET_TEMPLATE[] =
   "WalletGui--WalletTreeView {"
     "border: none;"
     "font-size: %fontSizeNormal%;"
-    "background-color: #e7ffb3;"
+    "background-color: #ffffff;"
     "border-bottom: 1px solid transparent;"
   "}"
 
@@ -50,7 +50,7 @@ const char WALLET_VIEW_STYLE_SHEET_TEMPLATE[] =
   "WalletGui--WalletTreeView > QHeaderView {"
     "min-height: 20px;"
     "max-height: 20px;"
-    "background-color: #e7ffb3;"
+    "background-color: #ffffff;"
     "border: none;"
     "border-bottom: 1px solid %borderColor%;"
   "}"
@@ -58,7 +58,7 @@ const char WALLET_VIEW_STYLE_SHEET_TEMPLATE[] =
   "WalletGui--WalletTreeView > QHeaderView::section {"
     "font-size: %fontSizeSmall%;"
     "color: %fontColorGray%;"
-    "background-color: #e7ffb3;"
+    "background-color: #ffffff;"
     "border: none;"
     "border-left: 23px solid transparent;"
     "border-right: 20px solid transparent;"
@@ -74,11 +74,11 @@ const char WALLET_VIEW_STYLE_SHEET_TEMPLATE[] =
   "}"
 
   "WalletGui--WalletTreeView::item:alternate {"
-    "background: #e7ffb3;"
+    "background: #ffffff;"
   "}"
 
   "WalletGui--WalletTreeView::item:selected {"
-    "color: #e7ffb3;"
+    "color: #ffffff;"
     "background: %selectionColor%;"
   "}"
 

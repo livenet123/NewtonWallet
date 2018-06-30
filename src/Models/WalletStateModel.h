@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
@@ -32,12 +32,12 @@ class WalletStateModel : public QAbstractItemModel, public IWalletAdapterObserve
 public:
   enum Columns {
     COLUMN_IS_OPEN = 0, COLUMN_IS_CLOSED, COLUMN_IS_ENCRYPTED, COLUMN_IS_NOT_ENCRYPTED, COLUMN_ADDRESS, COLUMN_ACTUAL_BALANCE,
-      COLUMN_PENDING_BALANCE, COLUMN_TOTAL_BALANCE, COLUMN_IS_SYNCHRONIZED, COLUMN_IS_NOT_SYNCHRONIZED, COLUMN_ABOUT_TO_BE_SYNCHRONIZED
+      COLUMN_PENDING_BALANCE, COLUMN_TOTAL_BALANCE, COLUMN_IS_SYNCHRONIZED, COLUMN_IS_NOT_SYNCHRONIZED, COLUMN_ABOUT_TO_BE_SYNCHRONIZED, COLUMN_TOTAL_SHORT_BALANCE
   };
 
   enum Roles {
     ROLE_IS_OPEN = Qt::UserRole, ROLE_IS_ENCRYPTED, ROLE_ADDRESS, ROLE_ACTUAL_BALANCE, ROLE_PENDING_BALANCE, ROLE_TOTAL_BALANCE,
-      ROLE_IS_SYNCHRONIZED, ROLE_ABOUT_TO_BE_SYNCHRONIZED
+      ROLE_IS_SYNCHRONIZED, ROLE_ABOUT_TO_BE_SYNCHRONIZED, ROLE_TOTAL_SHORT_BALANCE
   };
 
   WalletStateModel(ICryptoNoteAdapter* m_cryptoNoteAdapter, QObject* _parent);
@@ -75,6 +75,7 @@ private:
   quint64 m_actualBalance;
   quint64 m_pendingBalance;
   quint64 m_totalBalance;
+  quint64 m_totalShortBalance;
   quint32 m_currentHeight;
   quint32 m_totalHeight;
   bool m_isSynchronized;

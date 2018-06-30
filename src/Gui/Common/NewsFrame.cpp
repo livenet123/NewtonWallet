@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDesktopServices>
 #include <QTextDocument>
@@ -56,19 +56,19 @@ const char NEWS_FRAME_STYLE_SHEEET_TEMPLATE[] =
   "}"
 
   "WalletGui--NewsFrame #m_scrollFrame #m_scrollUpButton {"
-    "image: url(""C:/Users/alaa/source/repos/Newtonwallet/srcicons/scroll-news-up.png"");"
+    "image: url(:icons/scroll-news-up);"
   "}"
 
   "WalletGui--NewsFrame #m_scrollFrame #m_scrollUpButton:hover {"
-    "image: url(""C:/Users/alaa/source/repos/Newtonwallet/src/icons/scroll-news-up-hover.png"");"
+    "image: url(:icons/scroll-news-up-hover);"
   "}"
 
   "WalletGui--NewsFrame #m_scrollFrame #m_scrollDownButton {"
-    "image: url(""C:/Users/alaa/source/repos/Newtonwallet/src/icons/scroll-news-down.png"");"
+    "image: url(:icons/scroll-news-down);"
   "}"
 
   "WalletGui--NewsFrame #m_scrollFrame #m_scrollDownButton:hover {"
-    "image: url(""C:/Users/alaa/source/repos/Newtonwallet/src/icons/scroll-news-down-hover.png"");"
+    "image: url(:icons/scroll-news-down-hover);"
   "}"
 ;
 

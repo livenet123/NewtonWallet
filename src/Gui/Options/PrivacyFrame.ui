@@ -13,9 +13,6 @@
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="locale">
-   <locale language="English" country="UnitedStates"/>
-  </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
   </property>
@@ -73,9 +70,6 @@
       </property>
       <item>
        <widget class="QCheckBox" name="m_newsCheck">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
         <property name="text">
          <string>I want to see Newton Blog feeds</string>
         </property>
@@ -84,7 +78,7 @@
       <item alignment="Qt::AlignTop">
        <widget class="WalletGui::WalletSmallGrayTextLabel" name="m_embeddedHelperLabel">
         <property name="text">
-         <string>Feature currently not available: Checking this box will result in updated Overview screen. It will now show you the latest posts of Bytecoin Blog providing you with fresh Newton news.</string>
+         <string>Checking this box will result in updated Overview screen. It will now show you the latest posts of Newton Blog providing you with fresh Newton news.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

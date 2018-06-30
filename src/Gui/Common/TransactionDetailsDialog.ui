@@ -344,11 +344,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>WalletGui::WalletNormalGrayTextLabel</class>
-   <extends>QLabel</extends>
-   <header>Gui/Common/WalletTextLabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>WalletGui::WalletTreeView</class>
    <extends>QTreeView</extends>
    <header>Gui/Common/WalletTreeView.h</header>
@@ -357,6 +352,11 @@
    <class>WalletGui::CopyMagicLabel</class>
    <extends>QLabel</extends>
    <header>Gui/Common/CopyMagicLabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WalletGui::WalletNormalGrayTextLabel</class>
+   <extends>QLabel</extends>
+   <header>Gui/Common/WalletTextLabel.h</header>
   </customwidget>
   <customwidget>
    <class>WalletGui::WalletNormalBlackTextLabel</class>

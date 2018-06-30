@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2017, The Intrinsiccoin developers
+// Copyright (c) 2015-2017, The Bytecoin developers
 //
-// This file is part of Intrinsiccoin.
+// This file is part of Bytecoin.
 //
-// Intrinsiccoin is free software: you can redistribute it and/or modify
+// Newton is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Intrinsiccoin is distributed in the hope that it will be useful,
+// Newton is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with Intrinsiccoin.  If not, see <http://www.gnu.org/licenses/>.
+// along with Newton.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -34,8 +34,8 @@ namespace WalletGui {
 namespace {
 
 const char BLOG_RSS_SCHEME[] = "https";
-const char BLOG_RSS_HOST[] = "medium.com";
-const char BLOG_RSS_PATH[] = "/@Newtonblockchain";
+const char BLOG_RSS_HOST[] = "www.newtoncoin.site";
+const char BLOG_RSS_PATH[] = "/blog/feed.atom/";
 
 const char BLOG_RSS_ID_TAG_NAME[] = "id";
 const char BLOG_RSS_LINK_TAG_NAME[] = "link";
@@ -58,11 +58,11 @@ BlogReader::~BlogReader() {
 }
 
 QString BlogReader::getName() const {
-  return tr("Intrinsiccoin Blog:");
+  return tr("Newton Blog:");
 }
 
 QPixmap BlogReader::getIcon() const {
-  return QPixmap("C:/Users/alaa/source/repos/Newtonwallet/src/icons/blog.png");
+  return QPixmap(":icons/blog");
 }
 
 QString BlogReader::getLastMessageId() const {
@@ -212,23 +212,23 @@ void BlogReader::processBlogReplyData(const QString& _data) {
   QList<MessageItem> newMessages;
   while (!xml.atEnd() && newMessages.size() < MAX_MESSAGE_COUNT) {
     xml.readNext();
-    if (xml.isStartElement() && !xml.name().compare(QString("entry"))) {
+    if (xml.isStartElement() && !xml.name().compare((QString)"entry")) {
       MessageItem messageItem;
-      while (!xml.atEnd() && !(xml.isEndElement() && !xml.name().compare(QString("entry")))) {
+      while (!xml.atEnd() && !(xml.isEndElement() && !xml.name().compare((QString)"entry"))) {
         xml.readNext();
         if (xml.isStartElement()) {
-          if (!xml.name().compare(QString(BLOG_RSS_ID_TAG_NAME))) {
+          if (!xml.name().compare((QString)BLOG_RSS_ID_TAG_NAME)) {
             messageItem.messageId = xml.readElementText();
-          } else if(!xml.name().compare(QString(BLOG_RSS_LINK_TAG_NAME))) {
-            messageItem.messageSourceUrl = xml.attributes().value(BLOG_RSS_LINK_HREF_ATTRIBUTE_NAME).toString();
-          } else if(!xml.name().compare(QString(BLOG_RSS_TITLE_TAG_NAME))) {
+          } else if(!xml.name().compare((QString)BLOG_RSS_LINK_TAG_NAME)) {
+            messageItem.messageSourceUrl = xml.attributes().value((QString)BLOG_RSS_LINK_HREF_ATTRIBUTE_NAME).toString();
+          } else if(!xml.name().compare((QString)BLOG_RSS_TITLE_TAG_NAME)) {
             messageItem.messageTitle = xml.readElementText();
-          } else if(!xml.name().compare(QString(BLOG_RSS_CONTENT_TAG_NAME))) {
+          } else if(!xml.name().compare((QString)BLOG_RSS_CONTENT_TAG_NAME)) {
             QString htmlText = xml.readElementText();
             QTextDocument textDoc;
             textDoc.setHtml(htmlText);
             messageItem.messageText = textDoc.toPlainText();
-          } else if(!xml.name().compare(QString(BLOG_RSS_UPDATED_TAG_NAME))) {
+          } else if(!xml.name().compare((QString)BLOG_RSS_UPDATED_TAG_NAME)) {
             QString timeString = xml.readElementText();
             messageItem.messageTime = QDateTime::fromString(timeString, Qt::ISODate);
           }

@@ -1,6 +1,6 @@
 
 
-# Newton Wallet
+# Newton GUI Wallet
 
 
 ## Building on Mac OSX

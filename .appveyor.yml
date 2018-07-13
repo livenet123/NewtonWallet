@@ -1,11 +1,11 @@
 os: Visual Studio 2017
 
 environment:
-    BOOST_ROOT: C:\Libraries\boost_1_67_0
-    BOOST_LIBRARYDIR: C:\Libraries\boost_1_67_0\lib64-msvc-14.1
+    BOOST_ROOT: C:\Libraries\boost_1_66_0
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib64-msvc-14.1
     QT5: C:\Qt\5.9.5\msvc2017_64
 init:
-  - set PATH=%PATH%;%QT5%\bin;%QT5%\lib\cmake\Qt5GUI
+  - set PATH=%PATH%;%QT5%\bin;%QT5%\lib\cmake\Qt5GUI;%BOOST_ROOT%,%BOOST_LIBRARYDIR%
 build_script:
     - git clone https://github.com/livenet123/Newton.git cryptonote
     - md build && cd build

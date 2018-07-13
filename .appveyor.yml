@@ -2,7 +2,7 @@ os: Visual Studio 2017
 
 environment:
     BOOST_ROOT: C:\Libraries\boost_1_66_0
-    CMAKE_PREFIX_PATH : C:\Qt\5.9.5\msvc2017_64
+    QTDIR : C:\Qt\5.9.5\msvc2017_64
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib64-msvc-14.1
 
 build_script:

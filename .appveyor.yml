@@ -4,6 +4,8 @@ environment:
     BOOST_ROOT: C:\Libraries\boost_1_66_0
     QT5: C:\Qt\5.9.5\msvc2017_64
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib64-msvc-14.1
+install:
+  - set PATH=%PATH%;%QT5%\bin;%QT5%\lib\cmake\Qt5GUI
 build_script:
     - git clone https://github.com/livenet123/Newton.git cryptonote
     - md build && cd build

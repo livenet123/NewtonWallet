@@ -1,8 +1,8 @@
 os: Visual Studio 2017
 
 environment:
-    BOOST_ROOT: 'C:\Libraries\boost_1_66_0'
-    BOOST_LIBRARYDIR: 'C:\Libraries\boost_1_66_0\lib64-msvc-14.1'
+    BOOST_ROOT: 'C:\Libraries\boost_1_67_0'
+    BOOST_LIBRARYDIR: 'C:\Libraries\boost_1_67_0\lib64-msvc-14.1'
     QTDIR: 'C:\Qt\5.10.1\msvc2017_64'
     PATH: '%PATH%;%QTDIR%\bin;%BOOST_LIBRARYDIR%'
 build_script:
@@ -11,5 +11,5 @@ build_script:
    - echo %BOOST_LIBRARYDIR%
    - git clone https://github.com/livenet123/Newton.git cryptonote
    - md build && cd build
-   - cmake -G "Visual Studio 15 Win64" .. -DCMAKE_PREFIX_PATH=%QTDIR%;%BOOST_ROOT% -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT:STRING=%BOOST_ROOT% -DBOOST_LIBRARYDIR:STRING=%BOOST_LIBRARYDIR%
+   - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_PREFIX_PATH="%QTDIR%/lib/cmake/" -DBOOST_ROOT="C:/Libraries/boost_1_67_0" -DBOOST_LIBRARYDIR="C:/Libraries/boost_1_67_0/lib64-msvc-14.1" ..
    - MSBuild NewtonWallet.sln /p:Configuration=Release /m

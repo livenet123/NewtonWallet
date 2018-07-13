@@ -9,11 +9,11 @@ matrix:
     addons:
       apt:
         sources:
-        - sourceline: 'ppa:mhier/libboost-latest'
+        - sourceline: 'ppa:kzemek/boost'
         - ubuntu-toolchain-r-test
         packages:
         - g++-4.9
-        - boost1.67
+        - boost1.58
         - qtbase5-dev
     env:
     - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
@@ -22,7 +22,7 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update
   ; fi
 install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install boost1.67 qtbase5-dev
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libboost1.58-dev qtbase5-dev
   -y            ; fi
 script:
 - git clone https://github.com/livenet123/Newton.git cryptonote

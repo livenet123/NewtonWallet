@@ -12,7 +12,6 @@ matrix:
         - ubuntu-toolchain-r-test
         packages:
         - g++-4.9
-        - librocksdb-dev
         - qtbase5-dev
     env:
     - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
@@ -23,7 +22,7 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -q                            ;
   fi
 install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install librocksdb-dev qtbase5-dev
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install qtbase5-dev
   -y            ; fi
 script:
 - git clone https://github.com/livenet123/Newton.git cryptonote

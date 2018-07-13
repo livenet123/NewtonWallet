@@ -12,7 +12,8 @@ matrix:
         - ubuntu-toolchain-r-test
         packages:
         - g++-4.9
-        - libboost1.55-all-dev
+        - librocksdb-dev
+        - qtbase5-dev
     env:
     - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
   - os: osx
@@ -22,9 +23,7 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -q                            ;
   fi
 install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install librocksdb-dev
-  -y            ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install qtbase5-dev
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install librocksdb-dev qtbase5-dev
   -y            ; fi
 script:
 - git clone https://github.com/livenet123/Newton.git cryptonote
@@ -33,7 +32,7 @@ script:
 before_deploy:
 - mkdir NewtonWallet-${TRAVIS_TAG}
 - mv NewtonWallet NewtonWallet-${TRAVIS_TAG}/
-- tar cvfz NewtonWallet-${TRAVIS_TAG}-${TRAVIS_OS_NAME}.tar.gz NewtonWallet-${TRAVIS_TAG}/
+- tar -cvfz NewtonWallet-${TRAVIS_TAG}-${TRAVIS_OS_NAME}.tar.gz NewtonWallet-${TRAVIS_TAG}/
 - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy:
   provider: releases

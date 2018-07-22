@@ -11,5 +11,5 @@ build_script:
    - echo %BOOST_LIBRARYDIR%
    - git clone https://github.com/livenet123/Newton.git cryptonote
    - md build && cd build
-   - cmake -G "Visual Studio 15 Win64" -DCMAKE_PREFIX_PATH="%QTDIR%/lib/cmake/" -DBOOST_ROOT="C:\Libraries\boost_1_66_0" -DBOOST_LIBRARYDIR="C:\Libraries\boost_1_66_0\lib64-msvc-14.1"..
+   - cmake -G "Visual Studio 15 Win64" -DCMAKE_BUILD_TYPE=Release ..
    - MSBuild NewtonWallet.sln /p:Configuration=Release /m

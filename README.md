@@ -1,5 +1,7 @@
 
 
+[![Build status](https://ci.appveyor.com/api/projects/status/crhphitiaifl3rym/branch/master?svg=true)](https://ci.appveyor.com/project/livenet123/newtonwallet/branch/master)
+
 # Newton GUI Wallet
 
 

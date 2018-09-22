@@ -34,7 +34,7 @@ mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make
 ```
-[installation Guide](https://medium.com/@mailhandler_66795/installing-newton-3-0-0-wallet-on-ubuntu-2acf7cf0ca3c) 
+[Installation Guide](https://medium.com/@mailhandler_66795/installing-newton-3-0-0-wallet-on-ubuntu-2acf7cf0ca3c) 
 thank's to @[Shilli Vanilli](https://medium.com/@mailhandler_66795)
 ## Building on Windows
 

@@ -34,7 +34,8 @@ mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make
 ```
-
+[installation Guide](https://medium.com/@mailhandler_66795/installing-newton-3-0-0-wallet-on-ubuntu-2acf7cf0ca3c) 
+thank's to @[Shilli Vanilli](https://medium.com/@mailhandler_66795)
 ## Building on Windows
 
 You need Microsoft Visual Studio Community 2017. [Download](https://www.visualstudio.com/vs/) and install it selecting `C++`, `git`, `cmake integration` packages.

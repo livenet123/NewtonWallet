@@ -20,7 +20,7 @@ brew install qt5
 brew link --force qt5
 ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
 ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
-ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
+ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
 git clone https://github.com/livenet123/Newton.git
 git clone https://github.com/livenet123/NewtonWallet.git
 cd NewtonWallet

@@ -6,18 +6,27 @@
 
 
 ## Building on Mac OSX
+you need Homebrew and Command Line Tools to be installed on your macOS. Open terminal and execute
+
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+then execute these commands
 
 ```
 brew install boost
+brew install cmake
 brew install qt5
 brew link --force qt5
 ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
 ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
+ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
 git clone https://github.com/livenet123/Newton.git
 git clone https://github.com/livenet123/NewtonWallet.git
 cd NewtonWallet
 ln -s ../Newton/ cryptonote
 mkdir build && cd build
+export CMAKE_PREFIX_PATH=/usr/local/opt/qt5/
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make
 ```

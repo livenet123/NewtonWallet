@@ -11,16 +11,20 @@ you need Homebrew and Command Line Tools to be installed on your macOS. Open ter
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
-then execute these commands
+install dependencies for Newton GUI Wallet
 
 ```
 brew install boost
 brew install cmake
 brew install qt5
 brew link --force qt5
-ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
-ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
-ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
+sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
+sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
+sudo ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
+```
+get a copy of the sources and build
+
+```
 git clone https://github.com/livenet123/Newton.git
 git clone https://github.com/livenet123/NewtonWallet.git
 cd NewtonWallet

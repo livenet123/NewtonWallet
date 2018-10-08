@@ -82,7 +82,7 @@ Settings& Settings::instance() {
 
 
 Settings::Settings() : m_p2pBindPort(0), m_cmdLineParser(nullptr) {
-  m_defaultPoolList << "www.newtoncoin.club:3333" << "ncp.ms-pool.net.ua:3333" << "eu-ncp.4miner.me:3334" << "ncp-eu.ciapool.com:4005";
+  m_defaultPoolList << "www.newtoncoin.club:3333" << "ncp.ms-pool.net.ua:3333";
 
   Style* lightStyle = new LightStyle();
   Style* darkStyle = new DarkStyle();
@@ -147,7 +147,7 @@ bool Settings::isSystemTrayAvailable() const {
 #else
 
 #ifdef Q_OS_LINUX
-  if (QString(qVersion()) < "2.5.0") {
+  if (QString(qVersion()) < "5.5.0") {
     return false;
   }
 #endif

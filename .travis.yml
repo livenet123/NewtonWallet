@@ -13,7 +13,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         packages:        
-        - libboost-all-dev
+        - libboost1.55-all-dev
         - g++-4.9
         - gcc-4.9
     env:
@@ -25,6 +25,12 @@ matrix:
   - os: osx
     osx_image: xcode10
     compiler: gcc
+    addons:
+     homebrew:
+      packages:
+       - boost
+       - qt5
+    update: true
     env:
     - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
     - LABEL="osx-g++-4.9"
@@ -34,6 +40,12 @@ matrix:
   - os: osx
     osx_image: xcode10
     compiler: clang
+    addons:
+     homebrew:
+      packages:
+       - boost
+       - qt5
+    update: true
     env:
     - MATRIX_EVAL="CC=clang && CXX=clang++"
     - LABEL="osx-clang"
@@ -41,13 +53,14 @@ matrix:
     
   before_install:
     - eval $MATRIX_EVAL
+    - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+    - sudo apt-get update -qq
+    - sudo apt-get install qtbase5-dev
+    - sudo apt-get install qt5-default qttools5-dev-tools
 
 install:
 - if [[ "$LABEL" == "osx-g++-4.9" ]]; then brew install gcc@4.9 ; fi
-- if [ $TRAVIS_OS_NAME = osx ]; then brew install boost ; fi
 - if [ $TRAVIS_OS_NAME = osx ]; then brew install qt5 ; fi
-- if [ $TRAVIS_OS_NAME = linux ] then sudo apt-get install qtbase5-dev
-  -y  ; fi
 
 script:
 - eval $MATRIX_EVAL

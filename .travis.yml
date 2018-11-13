@@ -51,6 +51,7 @@ install:
 - if [[ "$LABEL" == "osx" ]]; then brew link --force qt5 ; fi
 - if [[ "$LABEL" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs ; fi
 - if [[ "$LABEL" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins ; fi
+- if [[ "$LABEL" == "osx" ]]; then  sudo ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake ; fi
 - if [[ "$LABEL" == "linux" ]]; then sudo apt-get install qtbase5-dev
   -y  ; fi
 

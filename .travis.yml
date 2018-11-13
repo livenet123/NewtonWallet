@@ -57,11 +57,12 @@ matrix:
     - sudo apt-get update -qq
     - sudo apt-get install qtbase5-dev
     - sudo apt-get install qt5-default qttools5-dev-tools
-
-install:
-- if [[ "$LABEL" == "osx-g++-4.9" ]]; then brew install gcc@4.9 ; fi
-- if [ $TRAVIS_OS_NAME = osx ]; then brew install qt5 ; fi
-
+    - if [ $TRAVIS_OS_NAME = osx ];  then
+      echo "Adding brewed Qt5 to path";
+      export PATH=/usr/local/opt/qt5/bin:$PATH;
+      qmake -v;
+      fi
+      
 script:
 - eval $MATRIX_EVAL
 - git clone https://github.com/livenet123/Newton.git cryptonote

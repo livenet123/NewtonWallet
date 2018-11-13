@@ -47,7 +47,10 @@ install:
 - if [[ "${LABEL:0:3}" == "osx" ]]; then brew cask uninstall --force oclint || true ; fi
 
 - if [[ "$LABEL" == "osx" ]]; then brew install gcc@4.9 ; fi
-- if [[ "$LABEL" == "osx" ]]; then brew install qt ; fi
+- if [[ "$LABEL" == "osx" ]]; then brew install qt5 ; fi
+- if [[ "$LABEL" == "osx" ]]; then brew link --force qt5 ; fi
+- if [[ "$LABEL" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs ; fi
+- if [[ "$LABEL" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins ; fi
 - if [[ "$LABEL" == "linux" ]]; then sudo apt-get install qtbase5-dev
   -y  ; fi
 

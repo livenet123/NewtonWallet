@@ -43,8 +43,11 @@ matrix:
     - eval $MATRIX_EVAL
 
 install:
+# Need to uninstall oclint to get newer gcc installed https://github.com/travis-ci/travis-ci/issues/8826
+- if [[ "${LABEL:0:3}" == "osx" ]]; then brew cask uninstall --force oclint || true ; fi
+
 - if [[ "$LABEL" == "osx" ]]; then brew install gcc@4.9 ; fi
-- if [[ "$LABEL" == "osx" ]]; then brew install qt5
+- if [[ "$LABEL" == "osx" ]]; then brew install qt
 - if [[ "$LABEL" == "linux" ]]; then sudo apt-get install qtbase5-dev
   -y  ; fi
 

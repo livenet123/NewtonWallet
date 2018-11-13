@@ -5,41 +5,61 @@ env:
 - CXXFLAGS="-std=gnu++11"
 matrix:
   include:
+  
+  # Ubuntu, g++-4.9
   - os: linux
     addons:
       apt:
         sources:
         - ubuntu-toolchain-r-test
-        packages:
-        - g++-4.9
-        - qtbase5-dev
+        packages:        
         - libboost-all-dev
+        - g++-4.9
+        - gcc-4.9
     env:
     - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
+    - LABEL="linux-g++-4.9"
+    - STRIP="strip"
+    
+  # OSX, g++-4.9
   - os: osx
+    osx_image: xcode10
+    compiler: gcc
+    env:
+    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
+    - LABEL="osx-g++-4.9"
+    - STRIP="strip"  
+    
+  # OSX, clang
+  - os: osx
+    osx_image: xcode10
+    compiler: clang
+    env:
+    - MATRIX_EVAL="CC=clang && CXX=clang++"
+    - LABEL="osx-clang"
+    - STRIP="strip"
+    
   before_install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]] then
--  sudo apt purge cmake
--  sudo apt autoremove
--  wget https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.sh
--  sudo mkdir /opt/cmake
--  sudo sh cmake-3.11.4-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
--  sudo update-alternatives --install /usr/bin/cmake cmake /opt/cmake/bin/cmake 1 --force
-  ; if
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -q
-  ; fi
+    - eval $MATRIX_EVAL
+
 install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install qtbase5-dev
- -y  ; else brew install qt5     ; fi
+- if [[ "$LABEL" == "osx" ]]; then brew install gcc@4.9 ; fi
+- if [[ "$LABEL" == "osx" ]]; then brew install qt5
+- if [[ "$LABEL" == "linux" ]]; then sudo apt-get install qtbase5-dev
+  -y  ; fi
+
 script:
+- eval $MATRIX_EVAL
 - git clone https://github.com/livenet123/Newton.git cryptonote
 - mkdir build && cd build
 - cmake -DCMAKE_BUILD_TYPE=Release .. && make
+
 before_deploy:
 - mkdir NewtonWallet-${TRAVIS_TAG}
 - mv NewtonWallet NewtonWallet-${TRAVIS_TAG}/
 - tar -cvfz NewtonWallet-${TRAVIS_TAG}-${TRAVIS_OS_NAME}.tar.gz NewtonWallet-${TRAVIS_TAG}/
 - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+
 deploy:
   provider: releases
   api_key:

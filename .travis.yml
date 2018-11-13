@@ -60,6 +60,10 @@ matrix:
     - if [ $TRAVIS_OS_NAME = osx ];  then
       echo "Adding brewed Qt5 to path";
       export PATH=/usr/local/opt/qt5/bin:$PATH;
+      brew link --force qt5
+      sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
+      sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
+      sudo ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
       qmake -v;
       fi
       
@@ -67,7 +71,7 @@ script:
 - eval $MATRIX_EVAL
 - git clone https://github.com/livenet123/Newton.git cryptonote
 - mkdir build && cd build
-- cmake -DCMAKE_BUILD_TYPE=Release -DQt5_DIR=$(brew --prefix qt)/lib/cmake/Qt5  .. && make
+- cmake -DCMAKE_BUILD_TYPE=Release .. && make
 
 before_deploy:
 - mkdir NewtonWallet-${TRAVIS_TAG}

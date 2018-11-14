@@ -53,20 +53,20 @@ matrix:
     
   before_install:
     - eval $MATRIX_EVAL
+    - if [ $TRAVIS_OS_NAME = linux ];  then
     - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
     - sudo apt-get update -qq
-    - sudo apt-get install qtbase5-dev
+    - sudo apt-get install qtbase5-dev qtdeclarative5-dev
     - sudo apt-get install qt5-default qttools5-dev-tools
+      qmake -v;
+      fi
     - if [ $TRAVIS_OS_NAME = osx ];  then
       echo "Adding brewed Qt5 to path";
       export PATH=/usr/local/opt/qt5/bin:$PATH;
-      brew link --force qt5
-      sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
-      sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
-      sudo ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
+      export PATH=/usr/local/Cellar/qt5/5.11.0/:$PATH;
       qmake -v;
       fi
-      
+           
 script:
 - eval $MATRIX_EVAL
 - git clone https://github.com/livenet123/Newton.git cryptonote

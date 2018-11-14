@@ -1,55 +1,36 @@
 sudo: true
 language: cpp
-compiler: gcc
-env:
-- CXXFLAGS="-std=gnu++11"
+
 matrix:
   include:
   
-  # Ubuntu, g++-4.9
-  - os: linux
-    addons:
-      apt:
-        sources:
+  # ubuntu xenial gcc
+- os: linux
+  dist: xenial
+  compiler: gcc  
+  addons:
+    apt:
+     sources:
         - ubuntu-toolchain-r-test
-        packages:        
+     packages:        
         - libboost1.55-all-dev
-        - g++-4.9
-        - gcc-4.9
-    env:
-    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
-    - LABEL="linux-g++-4.9"
-    - STRIP="strip"
+  env:
+    - MATRIX_EVAL="CC=gcc && CXX=gcc++"
+    - LABEL="ubuntu-gcc" 
     
-  # OSX, g++-4.9
-  - os: osx
-    osx_image: xcode10
-    compiler: gcc
+   # osx clang   
+ - os: osx  
+   osx_image: xcode10
+   compiler: clang
     addons:
-     homebrew:
-      packages:
-       - boost
-       - qt5
-    update: true
-    env:
-    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9
-    - LABEL="osx-g++-4.9"
-    - STRIP="strip"  
-    
-  # OSX, clang
-  - os: osx
-    osx_image: xcode10
-    compiler: clang
-    addons:
-     homebrew:
-      packages:
+      homebrew:
+       packages:
        - boost
        - qt5
     update: true
     env:
     - MATRIX_EVAL="CC=clang && CXX=clang++"
     - LABEL="osx-clang"
-    - STRIP="strip"
     
   before_install:
     - eval $MATRIX_EVAL
@@ -61,6 +42,10 @@ matrix:
       qmake -v;
       fi
     - if [ $TRAVIS_OS_NAME = osx ];  then
+      brew link --force qt5
+      sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs
+      sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins
+      sudo ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
       echo "Adding brewed Qt5 to path";
       export PATH=/usr/local/opt/qt5/bin:$PATH;
       export PATH=/usr/local/Cellar/qt5/5.11.0/:$PATH;

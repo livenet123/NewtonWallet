@@ -4,7 +4,7 @@ language: cpp
 matrix:
   include:
   
-  # Ubuntu, g++-4.9
+  # Ubuntu, g++-7
   - os: linux
     addons:
       apt:
@@ -12,13 +12,13 @@ matrix:
         - ubuntu-toolchain-r-test
         packages:        
         - libboost1.55-all-dev
-        - g++-4.9
-        - gcc-4.9
+          - g++-7
+          - gcc-7
     env:
-    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-    - LABEL="linux-g++-4.9"
+    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - LABEL="linux-g++-7"
     
-  # OSX, g++-4.9
+  # OSX, g++-7
   - os: osx
     osx_image: xcode10
     compiler: gcc
@@ -29,8 +29,8 @@ matrix:
        - qt5
     update: true
     env:
-    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-    - LABEL="osx-g++-4.9"  
+    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - LABEL="osx-g++-7"  
     
   # OSX, clang
   - os: osx
@@ -52,12 +52,14 @@ matrix:
     - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get update -qq ; fi
     - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install qtbase5-dev qtdeclarative5-dev ; fi
     - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install qt5-default qttools5-dev-tools ; fi
-    - if [ $TRAVIS_OS_NAME = osx ]; then brew link --force qt5 ; fi     
-    - if [ $TRAVIS_OS_NAME = osx ]; then sudo ln -s /usr/local/Cellar/qt/5.11.0/mkspecs /usr/local/mkspecs ; fi 
-    - if [ $TRAVIS_OS_NAME = osx ]; then sudo ln -s /usr/local/Cellar/qt/5.11.0/plugins /usr/local/plugins ; fi 
+    - if [ $TRAVIS_OS_NAME = osx ]; then brew cask uninstall --force oclint || true ; fi
+    - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc@7 ; fi
+    - if [ $TRAVIS_OS_NAME = osx ]; then brew link --force qt5 ; fi 
+    - if [ $TRAVIS_OS_NAME = osx ]; then sudo ln -s /usr/local/Cellar/qt/5.11.1/mkspecs /usr/local/mkspecs ; fi 
+    - if [ $TRAVIS_OS_NAME = osx ]; then sudo ln -s /usr/local/Cellar/qt/5.11.1/plugins /usr/local/plugins ; fi 
     - if [ $TRAVIS_OS_NAME = osx ]; then sudo ls /usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake ; fi 
     - if [ $TRAVIS_OS_NAME = osx ]; then export PATH=/usr/local/opt/qt5/bin:$PATH ; fi 
-    - if [ $TRAVIS_OS_NAME = osx ]; then export PATH=/usr/local/Cellar/qt5/5.11.0/:$PATH ; fi 
+    - if [ $TRAVIS_OS_NAME = osx ]; then export PATH=/usr/local/Cellar/qt5/5.11.1/:$PATH ; fi 
            
 script:
 - eval $MATRIX_EVAL

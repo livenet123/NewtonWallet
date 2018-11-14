@@ -1,21 +1,21 @@
 sudo: true
 language: cpp
+compiler: gcc 
 
 matrix:
   include:
   
-  # ubuntu xenial gcc
+  # ubuntu gcc
 - os: linux
-  dist: xenial
-  compiler: gcc  
   addons:
     apt:
      sources:
         - ubuntu-toolchain-r-test
      packages:        
         - libboost1.55-all-dev
+        - g++-4.9
   env:
-    - MATRIX_EVAL="CC=gcc && CXX=gcc++"
+    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
     - LABEL="ubuntu-gcc" 
     
    # osx clang   
@@ -24,10 +24,10 @@ matrix:
    compiler: clang
     addons:
       homebrew:
-       packages:
-       - boost
-       - qt5
-    update: true
+        packages:
+          - boost
+          - qt5
+      update: true
     env:
     - MATRIX_EVAL="CC=clang && CXX=clang++"
     - LABEL="osx-clang"
@@ -35,10 +35,10 @@ matrix:
   before_install:
     - eval $MATRIX_EVAL
     - if [ $TRAVIS_OS_NAME = linux ];  then
-    - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
-    - sudo apt-get update -qq
-    - sudo apt-get install qtbase5-dev qtdeclarative5-dev
-    - sudo apt-get install qt5-default qttools5-dev-tools
+      sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+      sudo apt-get update -qq
+      sudo apt-get install qtbase5-dev qtdeclarative5-dev
+      sudo apt-get install qt5-default qttools5-dev-tools
       qmake -v;
       fi
     - if [ $TRAVIS_OS_NAME = osx ];  then

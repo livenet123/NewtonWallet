@@ -54,13 +54,12 @@ matrix:
     - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install qt5-default qttools5-dev-tools ; fi
     - if [ $TRAVIS_OS_NAME = osx ]; then brew cask uninstall --force oclint || true ; fi
     - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc@7 ; fi
-    - if [ $TRAVIS_OS_NAME = osx ]; then export PATH=/usr/local/opt/qt5/bin:$PATH ; fi
-    - if [ $TRAVIS_OS_NAME = osx ]; then export PATH=/usr/local/opt/qt5/lib:$PATH ; fi 
            
 script:
 - eval $MATRIX_EVAL
 - git clone https://github.com/livenet123/Newton.git cryptonote
 - mkdir build && cd build
+- export CMAKE_PREFIX_PATH=/usr/local/opt/qt5/
 - cmake -DCMAKE_BUILD_TYPE=Release .. && make
 
 before_deploy:

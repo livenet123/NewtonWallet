@@ -38,9 +38,15 @@ matrix:
     
   before_install:
     - eval $MATRIX_EVAL
+    - if [ $TRAVIS_OS_NAME = linux ]; then wget http://www.cmake.org/files/v3.12/cmake-3.12.1.tar.gz ;fi 
+    - if [ $TRAVIS_OS_NAME = linux ]; then tar -xvzf cmake-3.12.1.tar.gz ; fi
+    - if [ $TRAVIS_OS_NAME = linux ]; then cd cmake-3.12.1 ; fi
+    - if [ $TRAVIS_OS_NAME = linux ]; then ./configure ; fi
+    - if [ $TRAVIS_OS_NAME = linux ]; then make ; fi
+    - if [ $TRAVIS_OS_NAME = linux ]; then sudo make install ; fi
+    - if [ $TRAVIS_OS_NAME = linux ]; then sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
+    - if [ $TRAVIS_OS_NAME = linux ]; then cmake --version 
     - if [ $TRAVIS_OS_NAME = osx ]; then brew cask uninstall --force oclint || true ; fi
-    - if [ $TRAVIS_OS_NAME = linux ]; then export BOOST_ROOT = "-DBOOST_ROOT=`/usr/include/boost`" ; fi 
-    - if [ $TRAVIS_OS_NAME = linux ]; then export BOOST_LIBRARYDIR = "-DBOOST_LIBRARYDIR='/usr/lib/x86_64-linux-gnu'" ; fi
     - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc@7 ; fi
 
 script:

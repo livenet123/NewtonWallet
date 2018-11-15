@@ -38,11 +38,8 @@ matrix:
     
   before_install:
     - eval $MATRIX_EVAL
-    # manually install latest cmake
-    - |
-    travis_retry wget \
-      -q https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.sh
-    sh cmake-3.11.1-Linux-x86_64.sh --skip-license
+    - if [ $TRAVIS_OS_NAME = linux ]; then wget -q https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.sh ; fi     
+    - if [ $TRAVIS_OS_NAME = linux ]; sh cmake-3.11.1-Linux-x86_64.sh --skip-license ; fi 
     
   install:
     - if [ $TRAVIS_OS_NAME = osx ]; then brew cask uninstall --force oclint || true ; fi

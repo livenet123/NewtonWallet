@@ -10,27 +10,16 @@ matrix:
       apt:
         sources:
         - ubuntu-toolchain-r-test
+        - ubuntu-sdk-team
         packages:        
-        - libboost1.55-all-dev
-          - g++-7
-          - gcc-7
+        - libboost1.60-all-dev
+        - qtbase5-dev
+        - g++-7
+        - gcc-7
     env:
     - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     - LABEL="linux-g++-7"
     - Deploy ="true"
-    
-  # OSX, g++-7
-  - os: osx
-    osx_image: xcode10
-    compiler: gcc
-    addons:
-     homebrew:
-      packages:
-       - boost
-       - qt5
-    env:
-    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-    - LABEL="osx-g++-7"  
     
   # OSX, clang
   - os: osx
@@ -48,10 +37,6 @@ matrix:
     
   before_install:
     - eval $MATRIX_EVAL
-    - if [ $TRAVIS_OS_NAME = linux ]; then sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa ; fi 
-    - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get update -qq ; fi
-    - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install qtbase5-dev qtdeclarative5-dev ; fi
-    - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install qt5-default qttools5-dev-tools ; fi
     - if [ $TRAVIS_OS_NAME = osx ]; then brew cask uninstall --force oclint || true ; fi
     - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc@7 ; fi
            

@@ -11,8 +11,9 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         - ubuntu-sdk-team
+        - sourceline: 'ppa:mhier/libboost-latest'
         packages:        
-        - libboost1.60-all-dev
+        - boost1.67
         - qtbase5-dev
         - g++-7
         - gcc-7

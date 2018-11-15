@@ -13,15 +13,6 @@ environment:
       BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib64-msvc-14.1
       QTDIR: C:\Qt\5.10.1\msvc2017_64
       PATH: '%PATH%;%QTDIR%\bin;%BOOST_ROOT%;%BOOST_LIBRARYDIR%'
-    - PLATFORM: x86
-      configuration: Release
-      BUILDER: CMake
-      GENERATOR: "Visual Studio 15 2017"
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      BOOST_ROOT: C:\Libraries\boost_1_66_0
-      BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib32-msvc-14.1
-      QTDIR: C:\Qt\5.10.1\msvc2017
-      PATH: '%PATH%;%QTDIR%\bin;%BOOST_ROOT%;%BOOST_LIBRARYDIR%'
 
 build_script:
    - git clone https://github.com/livenet123/Newton.git cryptonote

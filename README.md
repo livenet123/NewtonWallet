@@ -1,5 +1,9 @@
 
 
+* Newton Coin Project Swapped to [NCP Project Asset](http://dev.pywaves.org/assets/G1emXxRGHxDSe5sduNmqULJdKngRjk3C6d7nPw19fK86) on Waves Platform, This repository is archieved 
+* [Newton](https://github.com/ncpproject/Newton) is our new wallet for [NCP Project Asset](http://dev.pywaves.org/assets/G1emXxRGHxDSe5sduNmqULJdKngRjk3C6d7nPw19fK86)
+
+
 [![Build status](https://ci.appveyor.com/api/projects/status/crhphitiaifl3rym/branch/master?svg=true)](https://ci.appveyor.com/project/livenet123/newtonwallet/branch/master)
 
 # Newton GUI Wallet
